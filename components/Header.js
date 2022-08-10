@@ -30,8 +30,8 @@ export default function Header() {
 			<div
 				className={`${
 					scrollPosition > 110
-						? "h-[0px] opacity-0"
-						: "h-[110px] opacity-100"
+						? "h-[0px] -translate-y-[110px]"
+						: "h-[110px] translate-y-0"
 				} w-full relative flex justify-center items-center transition-all duration-300`}
 			>
 				<div className="bg-main fixed left-0 top-7 w-[30%] h-2"></div>

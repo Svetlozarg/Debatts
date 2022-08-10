@@ -42,7 +42,7 @@ export default function Footer() {
 							}}
 							passHref={true}
 						>
-							<a>Post a Debatt</a>
+							<a>Post a Debatts</a>
 						</Link>
 					</ul>
 					<ul>
