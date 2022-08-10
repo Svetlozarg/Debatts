@@ -20,3 +20,50 @@ a {
 ul {
   list-style-type: none;
 }
+
+/* Just for now */
+header {
+  width: 100%;
+  height: 60px;
+  border-bottom: 1px solid #000;
+  text-align: center;
+  margin: 0 auto;
+  position: fixed;
+  top: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+header nav ul {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  font-size: 1.5rem;
+}
+
+header nav ul li a:hover {
+  padding-bottom: 5px;
+  border-bottom: 1px solid #000;
+}
+
+/* Just for now */
+footer {
+  width: 100%;
+  height: 60px;
+  text-align: center;
+  margin: 0 auto;
+  position: fixed;
+  bottom: 0;
+  background-color: #000;
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Just for now */
+main {
+  padding-top: 5rem;
+}
