@@ -22,6 +22,7 @@ ul {
 }
 
 /* Just for now */
+/* Header */
 header {
   width: 100%;
   height: 60px;
@@ -31,7 +32,7 @@ header {
   position: fixed;
   top: 0;
   display: flex;
-  justify-content: center;
+  justify-content: space-around;
   align-items: center;
 }
 
@@ -40,7 +41,7 @@ header nav ul {
   justify-content: center;
   align-items: center;
   gap: 2rem;
-  font-size: 1.5rem;
+  font-size: 1.2rem;
 }
 
 header nav ul li a:hover {
@@ -48,7 +49,15 @@ header nav ul li a:hover {
   border-bottom: 1px solid #000;
 }
 
-/* Just for now */
+header .header-btns {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  font-size: 1.2rem;
+}
+
+/* Footer*/
 footer {
   width: 100%;
   height: 60px;
@@ -63,13 +72,13 @@ footer {
   align-items: center;
 }
 
-/* Just for now */
+/* Main */
 main {
   padding-top: 5rem;
+  text-align: center;
 }
 
 main h1 {
-  text-align: center;
   margin-bottom: 2rem;
 }
 

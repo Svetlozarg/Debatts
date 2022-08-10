@@ -1,8 +1,9 @@
 // Functions Import
 import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
+import { getAuth } from "firebase/auth";
 
 // Firebase Configuration
+// Add to .env file
 const firebaseConfig = {
   apiKey: "AIzaSyAd6mwZsJC34i43YZbktyGHt_XlaeiapPE",
   authDomain: "debatts-7a954.firebaseapp.com",
@@ -15,4 +16,4 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-// const analytics = getAnalytics(app);
+export const auth = getAuth();
