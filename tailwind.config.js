@@ -12,6 +12,11 @@ module.exports = {
 			warning: "#f50000",
 			black: "#000",
 			white: "#fff",
+			currentColor: "currentColor",
+		},
+		fontFamily: {
+			sans: "Helvetica",
+			mono: "Courier",
 		},
 		extend: {},
 	},

@@ -1,15 +1,16 @@
 import Link from "next/link";
-import Logo from "/public/logo.svg";
+import { useAuth } from "../context/AuthContext";
+import Logo from "./Logo";
 
 export default function Footer() {
+	const { user, logout } = useAuth();
+
 	return (
 		<footer className="bg-backAccent p-8 mt-auto">
 			<div className="grid grid-cols-3 gap-6">
 				{/* Logo area */}
 				<div className="flex justify-center items-center">
-					<div className="w-full h-[40px] bg-black">
-						<span className="text-back">Logo</span>
-					</div>
+					<Logo className={"text-3xl"} />
 				</div>
 
 				{/* Link area */}
@@ -54,11 +55,16 @@ export default function Footer() {
 							<a>Instagram</a>
 						</Link>
 					</ul>
+					<ul>
+						<a className="cursor-pointer" onClick={() => logout()}>
+							Log out DEV ONLY
+						</a>
+					</ul>
 				</li>
 
 				{/* Line */}
 				<div className="relative">
-					<div className="absolute -right-8 h-1.5 w-28 bg-main "></div>
+					<div className="absolute -right-8 h-1.5 w-[90%] bg-main "></div>
 				</div>
 			</div>
 		</footer>

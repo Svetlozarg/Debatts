@@ -13,7 +13,7 @@
 		@apply text-xl text-black mb-2;
 	}
 	a {
-		@apply underline;
+		@apply underline hover:text-main;
 	}
 	ul {
 		@apply list-none;
@@ -27,8 +27,7 @@
 /* Basic CSS Reset */
 html,
 body {
-	font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-		Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+	font-family: Helvetica, sans-serif;
 }
 
 * {
@@ -38,40 +37,6 @@ body {
 }
 
 /* Just for now */
-/* Header */
-header {
-	width: 100%;
-	height: 60px;
-	border-bottom: 1px solid #000;
-	text-align: center;
-	margin: 0 auto;
-	position: fixed;
-	top: 0;
-	display: flex;
-	justify-content: space-around;
-	align-items: center;
-}
-
-header nav ul {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	gap: 2rem;
-	font-size: 1.2rem;
-}
-
-header nav ul li a:hover {
-	padding-bottom: 5px;
-	border-bottom: 1px solid #000;
-}
-
-header .header-btns {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	gap: 2rem;
-	font-size: 1.2rem;
-}
 
 /* Main */
 main {
