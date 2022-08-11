@@ -35,14 +35,14 @@ export default function Login() {
 			router.push("/");
 		} catch (err) {
 			console.log(err);
+			// TODO: need to handle login failure
 		}
 	};
 
 	return (
-		// Login Page
 		<main>
 			<LargeContainer className="col-span-full">
-				<h1 className="text-center underline decoration-main">
+				<h1 className="text-center underline decoration-main select-none">
 					Login Page
 				</h1>
 				<form className="grid gap-6" onSubmit={handleLogin}>
@@ -82,7 +82,7 @@ export default function Login() {
 					}}
 					passHref={true}
 				>
-					<ButtonOutline>Register</ButtonOutline>
+					<ButtonOutline>Go to register page</ButtonOutline>
 				</Link>
 			</div>
 		</main>

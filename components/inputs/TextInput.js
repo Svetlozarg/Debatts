@@ -10,7 +10,10 @@ export default function TextInput({
 }) {
 	return (
 		<div className={containerClassName}>
-			<label htmlFor={id} className="block mb-2 text-sm font-medium ">
+			<label
+				htmlFor={id}
+				className="block mb-2 text-sm font-medium select-none"
+			>
 				{label}
 			</label>
 			<input
@@ -19,7 +22,7 @@ export default function TextInput({
 				onChange={onChange}
 				placeholder={placeholder}
 				required={required ?? false}
-				className="bg-gray-200 border-0 text-sm rounded-md focus:ring-main/30 focus:border-main border-opacity-40 p-2 transition-all duration-150 w-full"
+				className="bg-gray-200 border-2 border-transparent text-sm rounded-md focus:border-main focus:outline p-2 transition-all duration-150 w-full"
 				pattern={pattern ?? null}
 			></input>
 		</div>
