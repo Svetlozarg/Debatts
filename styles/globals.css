@@ -4,7 +4,7 @@
 
 @layer base {
 	* {
-		@apply text-black;
+		@apply text-black decoration-main;
 	}
 	h1 {
 		@apply text-2xl text-black mb-3;
@@ -17,6 +17,9 @@
 	}
 	ul {
 		@apply list-none;
+	}
+	main {
+		@apply w-full h-full grid grid-flow-row grid-cols-6 lg:grid-cols-12 p-8 max-w-lg mx-auto gap-6;
 	}
 }
 
@@ -37,33 +40,6 @@ body {
 }
 
 /* Just for now */
-
-/* Main */
-main {
-	padding-top: 5rem;
-	text-align: center;
-}
-
-/* Login */
-.login-page form {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	flex-direction: column;
-	gap: 1rem;
-}
-
-.login-page form input {
-	width: 200px;
-	height: 30px;
-	padding: 5px;
-	font-size: 1rem;
-}
-
-.login-page form button {
-	padding: 0.5rem 2rem;
-	font-size: 1.1rem;
-}
 
 /* Register */
 .register-page form {

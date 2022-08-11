@@ -5,7 +5,7 @@ export default function Layout({ children }) {
 	return (
 		<div className="m-0 min-h-screen flex flex-col" id="main-wrapper">
 			<Header />
-			<div className="lg:container mx-auto mt-[150px]">{children}</div>
+			<div className="mt-[150px]">{children}</div>
 			<Footer />
 		</div>
 	);

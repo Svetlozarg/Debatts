@@ -5,20 +5,19 @@ module.exports = {
 		"./components/**/*.{js,ts,jsx,tsx}",
 	],
 	theme: {
-		colors: {
-			main: "#0050f5",
-			back: "#fff",
-			backAccent: "#f8f8f8",
-			warning: "#f50000",
-			black: "#000",
-			white: "#fff",
-			currentColor: "currentColor",
-		},
 		fontFamily: {
 			sans: "Helvetica",
 			mono: "Courier",
 		},
-		extend: {},
+		extend: {
+			colors: {
+				main: "#0050f5",
+				back: "#fff",
+				backAccent: "#ebebeb",
+				warning: "#f50000",
+				currentColor: "currentColor",
+			},
+		},
 	},
 	plugins: [],
 };

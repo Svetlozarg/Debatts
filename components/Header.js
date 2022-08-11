@@ -34,58 +34,61 @@ export default function Header() {
 						: "h-[110px] translate-y-0"
 				} w-full relative flex justify-center items-center transition-all duration-300`}
 			>
-				<div className="bg-main fixed left-0 top-7 w-[30%] h-2"></div>
-				<div className="bg-main fixed top-0 left-[70%] w-2 h-10"></div>
+				<div className="bg-main fixed left-0 top-7 w-[30%] h-1.5"></div>
+				<div className="bg-main fixed top-0 left-[70%] w-1.5 h-10"></div>
 
 				<Logo className={"text-4xl"} />
 			</div>
 
 			{/* Navigation */}
-			<div className="h-[45px] w-full bg-main ">
-				{user ? (
-					// logged in
-					<div className="h-full max-w-[350px] mx-auto  flex flex-row justify-around items-center">
-						<Link
-							href={{
-								pathname: "/",
-							}}
-							passHref={true}
-						>
-							<Button>My Debatts</Button>
-						</Link>
-						<Link
-							href={{
-								pathname: "/",
-							}}
-							passHref={true}
-						>
-							<Button>Post a Debatts</Button>
-						</Link>
-					</div>
-				) : (
-					// logged out
-					<div className="h-full max-w-[350px] mx-auto flex flex-row justify-around items-center">
-						<Link
-							href={{
-								pathname: "/login",
-							}}
-							passHref={true}
-						>
-							<Button>Login</Button>
-						</Link>
+			{router.pathname === "/login" ||
+			router.pathname === "/register" ? null : (
+				<div className="h-[45px] w-full bg-main ">
+					{user ? (
+						// logged in
+						<div className="h-full max-w-[350px] mx-auto  flex flex-row justify-around items-center">
+							<Link
+								href={{
+									pathname: "/",
+								}}
+								passHref={true}
+							>
+								<Button>My Debatts</Button>
+							</Link>
+							<Link
+								href={{
+									pathname: "/",
+								}}
+								passHref={true}
+							>
+								<Button>Post a Debatts</Button>
+							</Link>
+						</div>
+					) : (
+						// logged out
+						<div className="h-full max-w-[350px] mx-auto flex flex-row justify-around items-center">
+							<Link
+								href={{
+									pathname: "/login",
+								}}
+								passHref={true}
+							>
+								<Button>Login</Button>
+							</Link>
 
-						{/* Register */}
-						<Link
-							href={{
-								pathname: "/register",
-							}}
-							passHref={true}
-						>
-							<Button>Register</Button>
-						</Link>
-					</div>
-				)}
-			</div>
+							{/* Register */}
+							<Link
+								href={{
+									pathname: "/register",
+								}}
+								passHref={true}
+							>
+								<Button>Register</Button>
+							</Link>
+						</div>
+					)}
+				</div>
+			)}
 		</header>
 	);
 }
