@@ -46,7 +46,7 @@ export default function Header() {
 			{router.pathname === "/login" ||
 			router.pathname === "/register" ? null : (
 				<nav
-					className={`h-[45px] w-full transition-all duration-300 flex flex-row justify-between align-center ${
+					className={`h-[45px] w-full transition-all duration-300 flex flex-row justify-between align-center  ${
 						collapse ? "bg-backAccent" : "bg-main"
 					}`}
 				>
@@ -60,7 +60,7 @@ export default function Header() {
 
 					{user ? (
 						// logged in
-						<div className="h-full flex flex-row justify-end items-center gap-6">
+						<div className="h-full flex flex-row justify-end items-center">
 							<Link
 								href={{
 									pathname: "/",
@@ -68,7 +68,7 @@ export default function Header() {
 								passHref={true}
 							>
 								<ButtonHeader collapsed={collapse}>
-									My Debatts
+									Post a Debatts
 								</ButtonHeader>
 							</Link>
 							<Link
@@ -78,7 +78,7 @@ export default function Header() {
 								passHref={true}
 							>
 								<ButtonHeader collapsed={collapse}>
-									Post a Debatts
+									My Debatts
 								</ButtonHeader>
 							</Link>
 						</div>
