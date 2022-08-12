@@ -12,8 +12,9 @@ module.exports = {
 		extend: {
 			colors: {
 				main: "#0050f5",
+				secondary: "#2D848A",
 				back: "#fff",
-				backAccent: "#ebebeb",
+				backAccent: "#f8f8f8",
 				warning: "#f50000",
 				currentColor: "currentColor",
 			},

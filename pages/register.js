@@ -31,9 +31,9 @@ export default function Register() {
 	};
 
 	return (
-		<main>
+		<main className="max-w-lg">
 			<LargeContainer className="col-span-full">
-				<h1 className="text-center underline decoration-main select-none">
+				<h1 className="text-center underline decoration-secondary select-none">
 					Register Page
 				</h1>
 				<form className="grid gap-6" onSubmit={handleRegister}>

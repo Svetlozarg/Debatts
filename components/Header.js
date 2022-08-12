@@ -27,7 +27,7 @@ export default function Header() {
 	const collapse = scrollPosition > 110;
 
 	return (
-		<header className="w-full bg-backAccent fixed flex flex-col">
+		<header className="w-full bg-backAccent fixed flex flex-col z-40">
 			{/* top logo */}
 			<div
 				className={`${
@@ -47,7 +47,7 @@ export default function Header() {
 			router.pathname === "/register" ? null : (
 				<nav
 					className={`h-[45px] w-full transition-all duration-300 flex flex-row justify-between align-center  ${
-						collapse ? "bg-backAccent" : "bg-main"
+						collapse ? "bg-backAccent border-b-2" : "bg-main"
 					}`}
 				>
 					<div
