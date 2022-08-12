@@ -1,5 +1,4 @@
-import { useRef, useState } from "react";
-import { useIsOverflow } from "../hooks/useIsOverflow";
+import { useRef } from "react";
 import LinesEllipsis from "react-lines-ellipsis";
 import responsiveHOC from "react-lines-ellipsis/lib/responsiveHOC";
 import ButtonPill from "../buttons/ButtonPill";
@@ -9,9 +8,6 @@ export default function Card({ title, body, wide, agrees, disagrees }) {
 
 	// check for overflow to decide if bottom gradient should be shown
 	const conatinerRef = useRef();
-	const isOverflow = useIsOverflow(conatinerRef);
-
-	const [isExpanded, setExpanded] = useState(false);
 
 	return (
 		<div
@@ -68,20 +64,6 @@ export default function Card({ title, body, wide, agrees, disagrees }) {
 				</div>
 
 				<div className="flex flex-row justify-start items-center gap-1">
-					{/* <ButtonActionRound
-						onClick={() => {
-							setExpanded(!isExpanded);
-						}}
-						tip="expand"
-					>
-						<svg className="w-5 h-5 " viewBox="0 0 24 24">
-							<path
-								className="text-gray-700"
-								fill="currentColor"
-								d="M10,21V19H6.41L10.91,14.5L9.5,13.09L5,17.59V14H3V21H10M14.5,10.91L19,6.41V10H21V3H14V5H17.59L13.09,9.5L14.5,10.91Z"
-							/>
-						</svg>
-					</ButtonActionRound> */}
 					<ButtonPill tip="go to discussion" className="px-5 py-1.5">
 						<svg className="w-5 h-5 " viewBox="0 0 24 24">
 							<path
@@ -91,6 +73,7 @@ export default function Card({ title, body, wide, agrees, disagrees }) {
 							/>
 						</svg>
 					</ButtonPill>
+					{/* Can add more action buttons + admin dropdown here */}
 				</div>
 			</div>
 		</div>
