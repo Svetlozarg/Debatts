@@ -1,6 +1,6 @@
 export default function LargeContainer({ children, className }) {
 	return (
-		<div className={"p-4 border-2 border-main rounded-md " + className}>
+		<div className={"p-4 shadow-lg border-2 rounded-md " + className}>
 			{children}
 		</div>
 	);

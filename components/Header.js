@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useAuth } from "../context/AuthContext";
-import Button from "./buttons/Button";
+import ButtonHeader from "./buttons/ButtonHeader";
 import Logo from "./Logo";
 
 export default function Header() {
@@ -24,12 +24,14 @@ export default function Header() {
 		};
 	}, []);
 
+	const collapse = scrollPosition > 110;
+
 	return (
 		<header className="w-full bg-backAccent fixed flex flex-col">
 			{/* top logo */}
 			<div
 				className={`${
-					scrollPosition > 110
+					collapse
 						? "h-[0px] -translate-y-[110px]"
 						: "h-[110px] translate-y-0"
 				} w-full relative flex justify-center items-center transition-all duration-300`}
@@ -43,17 +45,31 @@ export default function Header() {
 			{/* Navigation */}
 			{router.pathname === "/login" ||
 			router.pathname === "/register" ? null : (
-				<div className="h-[45px] w-full bg-main ">
+				<nav
+					className={`h-[45px] w-full transition-all duration-300 flex flex-row justify-between align-center ${
+						collapse ? "bg-backAccent" : "bg-main"
+					}`}
+				>
+					<div
+						className={`w-fit h-full mx-4 flex justify-center items-center transition-all duration-300 ${
+							collapse ? "translate-x-0" : "-translate-x-52"
+						}`}
+					>
+						<Logo></Logo>
+					</div>
+
 					{user ? (
 						// logged in
-						<div className="h-full max-w-[350px] mx-auto  flex flex-row justify-around items-center">
+						<div className="h-full flex flex-row justify-end items-center gap-6">
 							<Link
 								href={{
 									pathname: "/",
 								}}
 								passHref={true}
 							>
-								<Button>My Debatts</Button>
+								<ButtonHeader collapsed={collapse}>
+									My Debatts
+								</ButtonHeader>
 							</Link>
 							<Link
 								href={{
@@ -61,19 +77,23 @@ export default function Header() {
 								}}
 								passHref={true}
 							>
-								<Button>Post a Debatts</Button>
+								<ButtonHeader collapsed={collapse}>
+									Post a Debatts
+								</ButtonHeader>
 							</Link>
 						</div>
 					) : (
 						// logged out
-						<div className="h-full max-w-[350px] mx-auto flex flex-row justify-around items-center">
+						<div className="h-full flex flex-row justify-send items-center">
 							<Link
 								href={{
 									pathname: "/login",
 								}}
 								passHref={true}
 							>
-								<Button>Login</Button>
+								<ButtonHeader collapsed={collapse}>
+									Log in
+								</ButtonHeader>
 							</Link>
 
 							{/* Register */}
@@ -83,11 +103,13 @@ export default function Header() {
 								}}
 								passHref={true}
 							>
-								<Button>Register</Button>
+								<ButtonHeader collapsed={collapse}>
+									Register
+								</ButtonHeader>
 							</Link>
 						</div>
 					)}
-				</div>
+				</nav>
 			)}
 		</header>
 	);

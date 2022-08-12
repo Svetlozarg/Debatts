@@ -75,14 +75,15 @@ export default function Login() {
 					<ButtonOutline type="submit">Submit</ButtonOutline>
 				</form>
 			</LargeContainer>
-			<div className="col-span-full flex justify-center items-center w-full">
+			<div className="col-span-full flex flex-col justify-center items-center w-full">
+				<span>Don't have an account yet?</span>
 				<Link
 					href={{
 						pathname: "/register",
 					}}
 					passHref={true}
 				>
-					<ButtonOutline>Go to register page</ButtonOutline>
+					<a>Create an account</a>
 				</Link>
 			</div>
 		</main>

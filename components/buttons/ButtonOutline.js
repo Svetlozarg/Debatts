@@ -5,7 +5,7 @@ export default function ButtonOutline({ type, onClick, children }) {
 			type={type ?? "button"}
 			className="rounded-md bg-white border-2 border-main py-1 px-3 text-main hover:bg-main hover:text-white transition-all duration-200 ease-in-out"
 		>
-			<strong className="text-currentColor">{children}</strong>
+			<span className="text-currentColor ">{children}</span>
 		</button>
 	);
 }

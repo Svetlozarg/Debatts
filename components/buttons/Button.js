@@ -3,9 +3,9 @@ export default function Button({ onClick, type, children }) {
 		<button
 			onClick={onClick ?? null}
 			type={type ?? "button"}
-			className="rounded-md bg-main border-2 border-white py-1 px-3 text-white hover:bg-white hover:text-main transition-all duration-200 ease-in-out"
+			className="rounded-md bg-transparent shadow py-1 px-3 hover:bg-white/40  transition-all duration-200 ease-in-out"
 		>
-			<strong className="text-currentColor">{children}</strong>
+			<span className="text-currentColor">{children}</span>
 		</button>
 	);
 }

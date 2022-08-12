@@ -69,14 +69,15 @@ export default function Register() {
 					<ButtonOutline type="submit">Submit</ButtonOutline>
 				</form>
 			</LargeContainer>
-			<div className="col-span-full flex justify-center items-center w-full">
+			<div className="col-span-full flex flex-col justify-center items-center w-full">
+				<span>Already have an account?</span>
 				<Link
 					href={{
 						pathname: "/login",
 					}}
 					passHref={true}
 				>
-					<ButtonOutline>Go to to login page</ButtonOutline>
+					<a>Go to login page</a>
 				</Link>
 			</div>
 		</main>
