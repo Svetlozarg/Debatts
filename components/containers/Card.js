@@ -11,10 +11,12 @@ export default function Card({ title, body, wide, agrees, disagrees }) {
 
 	return (
 		<div
-			className={`flex flex-col justify-between max-h-[250px] bg-backAccent w-full shadow-md border rounded-md overflow-hidden ${
+			className={`flex flex-col justify-between max-h-[250px] bg-backAccent w-full shadow-md border rounded-md overflow-hidden hover:border-secondary transition-all duration-200 cursor-pointer ${
 				wide ? "col-span-6" : "col-span-3"
 			}`}
-			onClick={() => {}}
+			onClick={() => {
+				console.log("go to post");
+			}}
 		>
 			<div
 				ref={conatinerRef}
@@ -41,7 +43,12 @@ export default function Card({ title, body, wide, agrees, disagrees }) {
 
 			<div className="w-full h-auto bg-backAccent p-1 gap-1 border-t-2 flex flex-row justify-between items-center">
 				<div className="flex flex-row justify-start items-center gap-1">
-					<ButtonPill className="hover:bg-green-200">
+					<ButtonPill
+						className="hover:bg-green-200"
+						onClick={(e) => {
+							e.stopPropagation();
+						}}
+					>
 						<svg className="w-5 h-5 " viewBox="0 0 24 24">
 							<path
 								className="text-green-600"
@@ -51,7 +58,12 @@ export default function Card({ title, body, wide, agrees, disagrees }) {
 						</svg>
 						{agrees ?? "---"}
 					</ButtonPill>
-					<ButtonPill className="hover:bg-red-200">
+					<ButtonPill
+						className="hover:bg-red-200"
+						onClick={(e) => {
+							e.stopPropagation();
+						}}
+					>
 						<svg className="w-5 h-5 " viewBox="0 0 24 24">
 							<path
 								className="text-red-400"
@@ -64,7 +76,13 @@ export default function Card({ title, body, wide, agrees, disagrees }) {
 				</div>
 
 				<div className="flex flex-row justify-start items-center gap-1">
-					<ButtonPill tip="go to discussion" className="px-5 py-1.5">
+					<ButtonPill
+						tip="go to discussion"
+						className="px-5 py-1.5"
+						onClick={(e) => {
+							e.stopPropagation();
+						}}
+					>
 						<svg className="w-5 h-5 " viewBox="0 0 24 24">
 							<path
 								className="text-gray-700"

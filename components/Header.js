@@ -63,7 +63,7 @@ export default function Header() {
 						<div className="h-full flex flex-row justify-end items-center">
 							<Link
 								href={{
-									pathname: "/",
+									pathname: "/post",
 								}}
 								passHref={true}
 							>
