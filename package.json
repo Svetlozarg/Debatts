@@ -15,7 +15,8 @@
     "next": "12.2.4",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "react-lines-ellipsis": "^0.15.2"
+    "react-lines-ellipsis": "^0.15.2",
+    "react-modal": "^3.15.1"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.8",

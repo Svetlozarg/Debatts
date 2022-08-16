@@ -27,7 +27,7 @@ export default function Header() {
 	const collapse = scrollPosition > 110;
 
 	return (
-		<header className="w-full bg-backAccent fixed flex flex-col z-40">
+		<header className="w-full bg-backAccent fixed flex flex-col z-20">
 			{/* top logo */}
 			<div
 				className={`${
