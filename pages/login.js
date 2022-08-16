@@ -76,7 +76,7 @@ export default function Login() {
 				</form>
 			</LargeContainer>
 			<div className="col-span-full flex flex-col justify-center items-center w-full">
-				<span>Don't have an account yet?</span>
+				<span>Don&apos;t have an account yet?</span>
 				<Link
 					href={{
 						pathname: "/register",
