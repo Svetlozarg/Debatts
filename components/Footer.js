@@ -10,7 +10,7 @@ export default function Footer() {
 			<div className="grid grid-cols-3 gap-6">
 				{/* Logo area */}
 				<div className="flex justify-center items-center">
-					<Logo className={"text-3xl"} />
+					<Logo className={"w-[60%] max-w-[200px]"} />
 				</div>
 
 				{/* Link area */}

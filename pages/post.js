@@ -2,7 +2,6 @@ import { useState, useRef, useEffect } from "react";
 import ReactModal from "react-modal";
 
 import Button from "../components/buttons/Button";
-import ButtonOutline from "../components/buttons/ButtonOutline";
 import LargeContainer from "../components/containers/LargeContainer";
 import TextInputContainerless from "../components/inputs/TextInputContainerless";
 import useOnScreen from "../components/hooks/useOnScreen";
@@ -41,7 +40,7 @@ export default function Post() {
 		<div className="flex flex-row justify-between items-start">
 			<div className="hidden flex-grow lg:flex"></div>
 			<main className="max-w-xl">
-				<h1 className="text-center underline decoration-secondary select-none mb-0 col-span-full">
+				<h1 className="text-center decoration-secondary select-none mb-0 col-span-full">
 					Post a Debatts
 				</h1>
 				<form

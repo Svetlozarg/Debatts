@@ -4,7 +4,7 @@ export default function Button({ onClick, type, children, className }) {
 			onClick={onClick ?? null}
 			type={type ?? "button"}
 			className={
-				"rounded-md bg-white shadow py-1 px-3 hover:bg-secondary/40  transition-all duration-200 border " +
+				"rounded-md bg-white shadow py-1 px-3 hover:bg-main/40  transition-all duration-200 border " +
 				className
 			}
 		>

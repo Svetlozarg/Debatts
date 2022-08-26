@@ -7,12 +7,12 @@ module.exports = {
 	theme: {
 		fontFamily: {
 			sans: "Helvetica",
-			mono: "Courier",
+			mono: "AnonymousPro",
 		},
 		extend: {
 			colors: {
 				main: "#0050f5",
-				secondary: "#2D848A",
+				secondary: "#e93f08",
 				back: "#fff",
 				backAccent: "#f8f8f8",
 				warning: "#f50000",

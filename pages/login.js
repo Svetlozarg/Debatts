@@ -1,7 +1,6 @@
 import { useRouter } from "next/router";
 import { useState } from "react";
 import Link from "next/link";
-
 import { useAuth } from "../context/AuthContext";
 import ButtonOutline from "../components/buttons/ButtonOutline";
 import LargeContainer from "../components/containers/LargeContainer";
@@ -69,7 +68,7 @@ export default function Login() {
 								password: e.target.value,
 							});
 						}}
-						placeholder="email@example.com"
+						placeholder="password"
 						required
 					></TextInput>
 					<ButtonOutline type="submit">Submit</ButtonOutline>

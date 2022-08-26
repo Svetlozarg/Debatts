@@ -60,7 +60,7 @@ export default function Register() {
 								password: e.target.value,
 							});
 						}}
-						placeholder="email@example.com"
+						placeholder="password"
 						required
 					></TextInput>
 					<Checkbox required id="TnCs">

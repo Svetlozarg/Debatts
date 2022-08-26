@@ -2,6 +2,31 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+	font-family: "AnonymousPro";
+	src: url("../asset/AnonymousPro/Anonymous\ Pro.ttf");
+	font-weight: normal;
+	font-style: normal;
+}
+@font-face {
+	font-family: "AnonymousPro";
+	src: url("../asset/AnonymousPro/Anonymous\ Pro\ B.ttf");
+	font-weight: bold;
+	font-style: normal;
+}
+@font-face {
+	font-family: "AnonymousPro";
+	src: url("../asset/AnonymousPro/Anonymous\ Pro\ BI.ttf");
+	font-weight: bold;
+	font-style: italic;
+}
+@font-face {
+	font-family: "AnonymousPro";
+	src: url("../asset/AnonymousPro/Anonymous\ Pro\ I.ttf");
+	font-weight: normal;
+	font-style: italic;
+}
+
 @layer base {
 	* {
 		@apply text-black decoration-main p-0 m-0 box-border;
@@ -12,10 +37,13 @@
 		@apply outline-none;
 	}
 	h1 {
-		@apply text-2xl text-black mb-3;
+		@apply text-3xl text-black mb-3;
 	}
 	h2 {
-		@apply text-xl text-black mb-2;
+		@apply text-2xl text-black mb-2;
+	}
+	h3 {
+		@apply text-xl;
 	}
 	a {
 		@apply underline hover:text-secondary visited:text-black cursor-pointer;
