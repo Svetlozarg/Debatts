@@ -43,7 +43,7 @@ export default function Card({ title, body, wide, agrees, disagrees }) {
 
 			<div className="w-full h-auto bg-backAccent p-1 gap-1 border-t-2 flex flex-row justify-between items-center">
 				<div className="flex flex-row justify-start items-center gap-1">
-					<ButtonPill
+					{/* <ButtonPill
 						className="hover:bg-green-200"
 						onClick={(e) => {
 							e.stopPropagation();
@@ -72,7 +72,7 @@ export default function Card({ title, body, wide, agrees, disagrees }) {
 							/>
 						</svg>
 						{disagrees ?? "---"}
-					</ButtonPill>
+					</ButtonPill> */}
 				</div>
 
 				<div className="flex flex-row justify-start items-center gap-1">

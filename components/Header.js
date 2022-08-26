@@ -39,7 +39,7 @@ export default function Header() {
 				<div className="bg-main fixed left-0 top-7 w-[30%] h-1.5"></div>
 				<div className="bg-main fixed top-0 left-[70%] w-1.5 h-10"></div>
 
-				<Logo className={"text-4xl"} />
+				<Logo className={"h-[70%]"} />
 			</div>
 
 			{/* Navigation */}

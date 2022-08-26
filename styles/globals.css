@@ -18,7 +18,7 @@
 		@apply text-xl text-black mb-2;
 	}
 	a {
-		@apply underline hover:text-secondary visited:text-black;
+		@apply underline hover:text-secondary visited:text-black cursor-pointer;
 	}
 	ul {
 		@apply list-none;

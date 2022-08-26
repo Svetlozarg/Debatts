@@ -28,7 +28,7 @@ export default function Footer() {
 					<ul>
 						<Link
 							href={{
-								pathname: "/",
+								pathname: "/account",
 							}}
 							passHref={true}
 						>
