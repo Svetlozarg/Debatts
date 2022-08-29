@@ -4,6 +4,7 @@ import ButtonOutline from "../../components/buttons/ButtonOutline";
 import CardSmall from "../../components/containers/CardSmall";
 import LargeContainer from "../../components/containers/LargeContainer";
 import TextInputContainerless from "../../components/inputs/TextInputContainerless";
+import Button from "../../components/buttons/Button";
 
 export default function Debatt({}) {
 	const router = useRouter();
@@ -83,47 +84,61 @@ export default function Debatt({}) {
 					</ButtonOutline>
 				</div>
 				{isCommentMode ? (
-					<LargeContainer className="w-full flex flex-col justify-start items-center border shadow-sm">
-						<div className="w-full flex justify-around items-center">
-							<ButtonOutline
-								onClick={() => setIsAgreeing(!isAgreeing)}
-								active={isAgreeing}
-							>
-								<div className="text-inherit flex flex-row justify-start items-center ">
-									<svg
-										className="w-6 h-6 text-inherit"
-										viewBox="0 0 24 24"
-									>
-										<path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" />
-									</svg>
-									Agree
-								</div>
-							</ButtonOutline>
-							<ButtonOutline
-								onClick={() => setIsDisagreeing(!isDisagreeing)}
-								active={isDisagreeing}
-							>
-								<div className="text-inherit flex flex-row justify-start items-center ">
-									<svg
-										className="w-6 h-6 text-inherit"
-										viewBox="0 0 24 24"
-									>
-										<path d="M19,13H5V11H19V13Z" />
-									</svg>
-									Disagree
-								</div>
-							</ButtonOutline>
-						</div>
-						<TextInputContainerless
-							placeholder="Comment on the post..."
-							className="text-md  text-left min-h-[150px]  max-h-[40vh] bg-backAccent rounded-md shadow-inner"
-							containerClassName="pb-2 mt-4 overflow-none w-full"
-							onChange={(e) => {
-								setComment(e.target.value);
-							}}
-							characterLimit={100}
-						/>
-					</LargeContainer>
+					<div className="w-full">
+						<LargeContainer className="w-full flex flex-col justify-start items-center border shadow-sm">
+							<div className="w-full flex justify-around items-center">
+								<ButtonOutline
+									onClick={() => setIsAgreeing(!isAgreeing)}
+									active={isAgreeing}
+								>
+									<div className="text-inherit flex flex-row justify-start items-center ">
+										<svg
+											className="w-6 h-6 text-inherit"
+											viewBox="0 0 24 24"
+										>
+											<path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" />
+										</svg>
+										Agree
+									</div>
+								</ButtonOutline>
+								<ButtonOutline
+									onClick={() =>
+										setIsDisagreeing(!isDisagreeing)
+									}
+									active={isDisagreeing}
+								>
+									<div className="text-inherit flex flex-row justify-start items-center ">
+										<svg
+											className="w-6 h-6 text-inherit"
+											viewBox="0 0 24 24"
+										>
+											<path d="M19,13H5V11H19V13Z" />
+										</svg>
+										Disagree
+									</div>
+								</ButtonOutline>
+							</div>
+							<TextInputContainerless
+								placeholder="Comment on the post..."
+								className="text-md  text-left min-h-[150px]  max-h-[40vh] bg-backAccent rounded-md shadow-inner"
+								containerClassName="pb-2 mt-4 overflow-none w-full"
+								onChange={(e) => {
+									setComment(e.target.value);
+								}}
+								characterLimit={100}
+							/>
+							<Button className="self-end">Post</Button>
+						</LargeContainer>
+						<h2 className="font-bold text-secondary text-center mt-3">
+							REMEMBER!
+						</h2>
+						<p className="text-center font-semibold p-2 rounded-md border-secondary border-2">
+							Debatts is a platform without judgement, hate,
+							bullying and harassment. Use facts, informed
+							opinions and your own expertise to debate the topic
+							in a fair and succinct manner.
+						</p>
+					</div>
 				) : (
 					<div className="w-full grid grid-cols-2 max-h-[500px] overflow-scroll">
 						{/* Disagree */}

@@ -62,6 +62,7 @@ export default function Post() {
 										e.currentTarget.scrollHeight + "px";
 									setTitle(e.target.value);
 								}}
+								characterLimit={100}
 							/>
 							<div className="absolute h-1.5 w-[30%] bg-secondary -left-4 bottom-0"></div>
 						</div>
@@ -69,7 +70,7 @@ export default function Post() {
 						<TextInputContainerless
 							required
 							placeholder="Say something about it"
-							className="text-md  text-left max-h-[40vh] bg-backAccent rounded-md shadow-inner"
+							className="text-md text-left max-h-[40vh] bg-backAccent rounded-md shadow-inner"
 							containerClassName="pb-2 mb-2 overflow-none "
 							onChange={(e) => {
 								// auto adjust height
@@ -78,6 +79,7 @@ export default function Post() {
 									e.currentTarget.scrollHeight + "px";
 								setBody(e.target.value);
 							}}
+							characterLimit={400}
 						/>
 					</LargeContainer>
 
@@ -116,6 +118,7 @@ export default function Post() {
 				onRequestClose={() => {
 					setRulesModalOpen(false);
 				}}
+				ariaHideApp={false}
 			>
 				<div className="relative w-full flex flex-col justify-start items-start gap-2 p-4 ">
 					{rules}

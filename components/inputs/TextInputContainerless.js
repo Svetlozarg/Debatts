@@ -33,10 +33,16 @@ export default function TextInputContainerless({
 				required={required ?? false}
 				rows={1}
 				className={
-					" placeholder:text-black/80 focus:border-main focus:outline p-2 transition-all duration-150 w-full resize-none " +
-					className
+					` placeholder:text-black/80 focus:border-main focus:outline p-2 transition-all duration-150 w-full resize-none ${
+						textRef.current &&
+						characterLimit &&
+						textRef.current.value.length / characterLimit > 0.4
+							? "pb-8"
+							: ""
+					} ` + className
 				}
 				pattern={pattern ?? null}
+				maxLength={characterLimit}
 			></textarea>
 			<div className="absolute right-4 bottom-4">
 				{textRef.current && characterLimit && (

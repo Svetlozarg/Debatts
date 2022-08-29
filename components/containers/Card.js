@@ -6,7 +6,6 @@ import ButtonPill from "../buttons/ButtonPill";
 export default function Card({ title, body, wide, id }) {
 	const ResponsiveEllipsis = responsiveHOC()(LinesEllipsis);
 
-	// check for overflow to decide if bottom gradient should be shown
 	const router = useRouter();
 
 	function goToPost() {
