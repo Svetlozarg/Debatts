@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import ReactModal from "react-modal";
 
 import Button from "../components/buttons/Button";
@@ -22,9 +22,13 @@ export default function Post() {
 		setRulesModalOpen(false);
 	}, [isSidebarVisible]);
 
+	function submitPost(e) {
+		e.preventDefault();
+	}
+
 	const rules = (
-		<di className="w-full ">
-			<h1 className="text-center underline text-center">Rules</h1>
+		<div className="w-full ">
+			<h1 className="text-center underline">Rules</h1>
 			<p className="font-bold">write your rules here...</p>
 			<ul className="list-decimal ml-6">
 				<ul className="list-disc">
@@ -33,7 +37,7 @@ export default function Post() {
 					<li>rule 3</li>
 				</ul>
 			</ul>
-		</di>
+		</div>
 	);
 
 	return (
@@ -43,12 +47,7 @@ export default function Post() {
 				<h1 className="text-center decoration-secondary select-none mb-0 col-span-full">
 					Post a Debatts
 				</h1>
-				<form
-					className="col-span-full"
-					onSubmit={(e) => {
-						e.preventDefault();
-					}}
-				>
+				<form className="col-span-full" onSubmit={submitPost}>
 					<LargeContainer className=" text-center mb-2">
 						<div className="relative">
 							<TextInputContainerless

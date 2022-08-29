@@ -20,7 +20,7 @@ export default function Card({ title, body, wide, id }) {
 	return (
 		<div
 			className={`flex flex-col justify-between max-h-[250px] bg-backAccent w-full shadow-md border rounded-md overflow-hidden hover:border-secondary transition-all duration-200 cursor-pointer ${
-				wide ? "col-span-6" : "col-span-3"
+				wide ? "col-span-3 sm:col-span-6 lg:col-span-6" : "col-span-3"
 			}`}
 			onClick={goToPost}
 		>

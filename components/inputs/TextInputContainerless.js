@@ -1,3 +1,5 @@
+import { useRef } from "react";
+
 export default function TextInputContainerless({
 	placeholder,
 	onChange,
@@ -8,9 +10,12 @@ export default function TextInputContainerless({
 	className,
 	required,
 	pattern,
+	characterLimit,
 }) {
+	const textRef = useRef();
+
 	return (
-		<div className={containerClassName}>
+		<div className={"relative " + containerClassName}>
 			{label && (
 				<label
 					htmlFor={id}
@@ -20,6 +25,7 @@ export default function TextInputContainerless({
 				</label>
 			)}
 			<textarea
+				ref={textRef}
 				type={type}
 				name={id}
 				onChange={onChange}
@@ -32,6 +38,27 @@ export default function TextInputContainerless({
 				}
 				pattern={pattern ?? null}
 			></textarea>
+			<div className="absolute right-4 bottom-4">
+				{textRef.current && characterLimit && (
+					<p
+						className={`${
+							textRef.current.value.length / characterLimit > 0.4
+								? "aboslute"
+								: "hidden"
+						} ${
+							textRef.current.value.length / characterLimit > 0.8
+								? "text-orange-600"
+								: ""
+						} ${
+							textRef.current.value.length / characterLimit >= 1
+								? "!text-warning"
+								: "text-black"
+						} text-opacity-60 p-0.5 bg-black bg-opacity-5 rounded-md`}
+					>
+						{textRef.current.value.length}/{characterLimit}
+					</p>
+				)}
+			</div>
 		</div>
 	);
 }

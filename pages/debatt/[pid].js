@@ -121,6 +121,7 @@ export default function Debatt({}) {
 							onChange={(e) => {
 								setComment(e.target.value);
 							}}
+							characterLimit={100}
 						/>
 					</LargeContainer>
 				) : (
