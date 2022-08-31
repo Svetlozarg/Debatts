@@ -7,10 +7,11 @@ import { db } from "../config/firebase";
 import LargeContainer from "../components/containers/LargeContainer";
 
 export default function Account() {
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
   const router = useRouter();
   const [userData, setUserData] = useState(null);
 
+  // Fetch user data
   const handleUserData = async () => {
     const docRef = doc(db, "Users", user.email);
     const docSnap = await getDoc(docRef);

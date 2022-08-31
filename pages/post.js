@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import ReactModal from "react-modal";
 import { useAuth } from "../context/AuthContext";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, setDoc, updateDoc, arrayUnion } from "firebase/firestore";
 import { db } from "../config/firebase";
 
 import Button from "../components/buttons/Button";
@@ -50,6 +50,15 @@ export default function Post() {
       agree: [],
       disagree: [],
       createdAt: (today = mm + "/" + dd + "/" + yyyy),
+    });
+
+    const debattDoc = doc(db, "Users", user.email);
+
+    await updateDoc(debattDoc, {
+      debatts: arrayUnion({
+        author: user.email,
+        title: title,
+      }),
     });
 
     router.push("/");

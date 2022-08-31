@@ -41,6 +41,7 @@ export default function Register() {
           userName: data.userName,
           email: data.email,
           role: "user",
+          debatts: [],
           createdAt: (today = mm + "/" + dd + "/" + yyyy),
         });
 
