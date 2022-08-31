@@ -13,9 +13,10 @@ export default function MyPosts() {
   const { user } = useAuth();
   const router = useRouter();
 
-  // posts go here
+  // State to store posts
   const [posts, setPosts] = useState();
 
+  // Fetch Posts
   const fetchPosts = async () => {
     const docRef = doc(db, "Users", user.email);
     const docSnap = await getDoc(docRef);
@@ -63,6 +64,7 @@ export default function MyPosts() {
           );
         })
       ) : (
+        // If not posts
         <div className="col-span-full text-xl text-center flex flex-col justify-start items-center gap-4">
           <p>It seems you have not posted a debatts yet!</p>
           <Link href="/post/">

@@ -6,12 +6,6 @@ import ButtonOutline from "../components/buttons/ButtonOutline";
 import LargeContainer from "../components/containers/LargeContainer";
 import TextInput from "../components/inputs/TextInput";
 
-/*
-Test login:
-admin@admin.com
-admin1234
-*/
-
 export default function Login() {
   // User router
   const router = useRouter();
@@ -46,6 +40,7 @@ export default function Login() {
             Login Page
           </h1>
           <form className="grid gap-6" onSubmit={handleLogin}>
+            {/* Email */}
             <TextInput
               id="email"
               type="email"
@@ -59,6 +54,8 @@ export default function Login() {
               required
               placeholder="email@example.com"
             ></TextInput>
+
+            {/* Password */}
             <TextInput
               id="password"
               type="password"
