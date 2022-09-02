@@ -3,7 +3,7 @@ import LinesEllipsis from "react-lines-ellipsis";
 import responsiveHOC from "react-lines-ellipsis/lib/responsiveHOC";
 import ButtonPill from "../buttons/ButtonPill";
 
-export default function Card({ title, body, wide, id }) {
+export default function Card({ title, body, wide, id, author, createdAt }) {
 	const ResponsiveEllipsis = responsiveHOC()(LinesEllipsis);
 
 	const router = useRouter();
@@ -43,28 +43,9 @@ export default function Card({ title, body, wide, id }) {
 				/>
 			</div>
 
-			<div className="w-full h-auto bg-backAccent p-1 gap-1 border-t-2 flex flex-row justify-between items-center">
-				<div className="flex flex-row justify-start items-center gap-1"></div>
-
-				<div className="flex flex-row justify-start items-center gap-1">
-					<ButtonPill
-						tip="go to discussion"
-						className="px-5 py-1.5"
-						onClick={(e) => {
-							e.stopPropagation();
-							goToPost();
-						}}
-					>
-						<svg className="w-5 h-5 " viewBox="0 0 24 24">
-							<path
-								className="text-gray-700"
-								fill="currentColor"
-								d="M17,12V3A1,1 0 0,0 16,2H3A1,1 0 0,0 2,3V17L6,13H16A1,1 0 0,0 17,12M21,6H19V15H6V17A1,1 0 0,0 7,18H18L22,22V7A1,1 0 0,0 21,6Z"
-							/>
-						</svg>
-					</ButtonPill>
-					{/* Can add more action buttons + admin dropdown here */}
-				</div>
+			<div className="w-full h-auto bg-backAccent p-1 gap-1 border-t-2 flex flex-row justify-between items-center text-sm [&>*]:text-opacity-60">
+				<p>{author}</p>
+				<p>{createdAt}</p>
 			</div>
 		</div>
 	);

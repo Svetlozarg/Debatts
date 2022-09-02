@@ -3,12 +3,12 @@ import ReactModal from "react-modal";
 import { useAuth } from "../context/AuthContext";
 import { doc, setDoc, updateDoc, arrayUnion } from "firebase/firestore";
 import { db } from "../config/firebase";
-
 import Button from "../components/buttons/Button";
 import LargeContainer from "../components/containers/LargeContainer";
 import TextInputContainerless from "../components/inputs/TextInputContainerless";
 import useOnScreen from "../components/hooks/useOnScreen";
 import { useRouter } from "next/router";
+import Head from "next/head";
 
 export default function Post() {
 	// Router
@@ -81,6 +81,9 @@ export default function Post() {
 	if (user) {
 		return (
 			<div className="flex flex-row justify-between items-start">
+				<Head>
+					<title>Debatts · Post</title>
+				</Head>
 				<div className="hidden flex-grow lg:flex"></div>
 				<main className="max-w-xl">
 					<h1 className="text-center decoration-secondary select-none mb-0 col-span-full">
@@ -120,7 +123,7 @@ export default function Post() {
 										e.currentTarget.scrollHeight + "px";
 									setBody(e.target.value);
 								}}
-								characterLimit={400}
+								characterLimit={2000}
 							/>
 						</LargeContainer>
 
@@ -182,6 +185,7 @@ export default function Post() {
 					onRequestClose={() => {
 						setRulesModalOpen(false);
 					}}
+					ariaHideApp={true}
 				>
 					<div className="relative w-full flex flex-col justify-start items-start gap-2 p-4 ">
 						{rules}

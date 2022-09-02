@@ -13,6 +13,8 @@ import {
 } from "firebase/firestore";
 import { db } from "../../config/firebase";
 import { useAuth } from "../../context/AuthContext";
+import ModalStandard from "../../components/modals/ModalStandard";
+import Head from "next/head";
 
 export default function Debatt({}) {
 	const router = useRouter();
@@ -30,6 +32,10 @@ export default function Debatt({}) {
 	const [isDisagreeing, setIsDisagreeing] = useState(false);
 	// State to hold post data
 	const [info, setInfo] = useState();
+
+	//comment modal
+	const [commentToShow, setCommentToShow] = useState({});
+	const [isCommentModalShowing, setCommentModalShowing] = useState(false);
 
 	// Handle follow button clicked
 	async function followDebatt(e) {
@@ -57,6 +63,8 @@ export default function Debatt({}) {
 
 	// Fetch post data
 	const handlePostData = async () => {
+		if (!user) return;
+
 		const docRef = doc(db, "Debatts", pid);
 		const docSnap = await getDoc(docRef);
 
@@ -115,7 +123,10 @@ export default function Debatt({}) {
 	}, []);
 
 	return (
-		<main className="max-w-xl !h-full">
+		<main className="max-w-2xl !h-full">
+			<Head>
+				<title>Debatts · {info?.title}</title>
+			</Head>
 			<div className="col-span-full flex justify-start items-center flex-col ">
 				<h1 className="font-bold underline underline-offset-1 decoration-black">
 					{info?.title}
@@ -194,7 +205,7 @@ export default function Debatt({}) {
 							onChange={(e) => {
 								setComment(e.target.value);
 							}}
-							characterLimit={100}
+							characterLimit={1000}
 						/>
 						<ButtonOutline onClick={handlePostComment}>
 							<div className="text-inherit flex flex-row justify-start items-center ">
@@ -213,6 +224,13 @@ export default function Debatt({}) {
 										title={e.author}
 										body={e.comment}
 										key={i}
+										onClick={() => {
+											setCommentToShow({
+												author: e.author,
+												comment: e.comment,
+											});
+											setCommentModalShowing(true);
+										}}
 									/>
 								);
 							})}
@@ -226,6 +244,13 @@ export default function Debatt({}) {
 										title={e.author}
 										body={e.comment}
 										key={i}
+										onClick={() => {
+											setCommentToShow({
+												author: e.author,
+												comment: e.comment,
+											});
+											setCommentModalShowing(true);
+										}}
 									/>
 								);
 							})}
@@ -233,6 +258,15 @@ export default function Debatt({}) {
 					</div>
 				)}
 			</div>
+			<ModalStandard
+				isOpen={isCommentModalShowing}
+				onClose={() => {
+					setCommentToShow({});
+					setCommentModalShowing(false);
+				}}
+				title={commentToShow.author}
+				body={commentToShow.comment}
+			/>
 		</main>
 	);
 }
