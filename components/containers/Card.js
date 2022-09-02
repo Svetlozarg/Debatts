@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import LinesEllipsis from "react-lines-ellipsis";
 import responsiveHOC from "react-lines-ellipsis/lib/responsiveHOC";
-import ButtonPill from "../buttons/ButtonPill";
+import CardContainer from "./CardContainer";
 
 export default function Card({ title, body, wide, id, author, createdAt }) {
 	const ResponsiveEllipsis = responsiveHOC()(LinesEllipsis);
@@ -17,13 +17,8 @@ export default function Card({ title, body, wide, id, author, createdAt }) {
 	}
 
 	return (
-		<div
-			className={`flex flex-col justify-between max-h-[250px] bg-backAccent w-full shadow-md border rounded-md overflow-hidden hover:border-secondary transition-all duration-200 cursor-pointer ${
-				wide ? "col-span-3 sm:col-span-6 lg:col-span-6" : "col-span-3"
-			}`}
-			onClick={goToPost}
-		>
-			<div className="max-h-[210px] relative overflow-hidden overflow-ellipsis p-2">
+		<CardContainer wide={wide} onClick={goToPost}>
+			<div className="max-h-[210px] relative overflow-ellipsis">
 				<div className="relative px-6">
 					<h2 className="text-lg text-center font-medium pb-2">
 						{title.length > 47
@@ -40,6 +35,7 @@ export default function Card({ title, body, wide, id, author, createdAt }) {
 					ellipsis="..."
 					trimRight
 					basedOn="letters"
+					className="overflow-hidden"
 				/>
 			</div>
 
@@ -47,6 +43,6 @@ export default function Card({ title, body, wide, id, author, createdAt }) {
 				<p>{author}</p>
 				<p>{createdAt}</p>
 			</div>
-		</div>
+		</CardContainer>
 	);
 }

@@ -35,7 +35,7 @@ export default function Account() {
 	return (
 		<main className="max-w-lg">
 			<Head>
-				<title>Debatts · My Account</title>
+				<title>Debatts · Admin Panel</title>
 			</Head>
 			<LargeContainer className="col-span-full">
 				<h2 className="">{userData?.userName}</h2>
