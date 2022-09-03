@@ -15,6 +15,9 @@ import { db } from "../../config/firebase";
 import { useAuth } from "../../context/AuthContext";
 import ModalStandard from "../../components/modals/ModalStandard";
 import Head from "next/head";
+import ModalError from "../../components/modals/ModalError";
+import ButtonActionRound from "../../components/buttons/ButtonActionRound";
+import ModalAdmin from "../../components/modals/ModalAdmin";
 
 export default function Debatt({}) {
 	const router = useRouter();
@@ -36,6 +39,12 @@ export default function Debatt({}) {
 	//comment modal
 	const [commentToShow, setCommentToShow] = useState({});
 	const [isCommentModalShowing, setCommentModalShowing] = useState(false);
+
+	const [errorToShow, setErrorToShow] = useState("");
+	const [isErrorShowing, setIsErrorShowing] = useState(false);
+
+	const [isAdmin, setIsAdmin] = useState(true);
+	const [isAdminModalShown, setIsAdminModalShown] = useState(false);
 
 	// Handle follow button clicked
 	async function followDebatt(e) {
@@ -89,25 +98,42 @@ export default function Debatt({}) {
 
 	// Handle post comment
 	const handlePostComment = async () => {
-		const debattDoc = doc(db, "Debatts", info.title);
+		if (!(isAgreeing || isDisagreeing)) {
+			setErrorToShow("You have not decided if you disagree or not!");
+			setIsErrorShowing(true);
 
-		if (isAgreeing) {
-			await updateDoc(debattDoc, {
-				agree: arrayUnion({
-					author: user.email,
-					comment: comment,
-				}),
-			});
-		} else if (isDisagreeing) {
-			await updateDoc(debattDoc, {
-				disagree: arrayUnion({
-					author: user.email,
-					comment: comment,
-				}),
-			});
+			return;
 		}
-		handlePostData();
-		setIsCommentMode(false);
+		if (!comment) {
+			setErrorToShow("You have not commented!");
+			setIsErrorShowing(true);
+			return;
+		}
+
+		try {
+			const debattDoc = doc(db, "Debatts", info.title);
+
+			if (isAgreeing) {
+				await updateDoc(debattDoc, {
+					agree: arrayUnion({
+						author: user.email,
+						comment: comment,
+					}),
+				});
+			} else if (isDisagreeing) {
+				await updateDoc(debattDoc, {
+					disagree: arrayUnion({
+						author: user.email,
+						comment: comment,
+					}),
+				});
+			}
+			handlePostData();
+			setIsCommentMode(false);
+		} catch (e) {
+			setErrorToShow(e);
+			setIsErrorShowing(true);
+		}
 	};
 
 	useEffect(() => {
@@ -146,6 +172,22 @@ export default function Debatt({}) {
 							{isCommentMode ? "View Comments" : "Add Comment"}
 						</ButtonOutline>
 					)}
+
+					<ButtonActionRound
+						onClick={(e) => {
+							e.stopPropagation();
+							setIsAdminModalShown(!isAdminModalShown);
+						}}
+						className="dropdown"
+					>
+						<svg viewBox="0 0 24 24" className="w-6">
+							<path
+								className="fill-gray-500"
+								fill="currentColor"
+								d="M12,1L3,5V11C3,16.55 6.84,21.74 12,23C17.16,21.74 21,16.55 21,11V5L12,1Z"
+							/>
+						</svg>
+					</ButtonActionRound>
 
 					{/* Follow Button */}
 					{user?.email !== info?.author && user && (
@@ -218,42 +260,54 @@ export default function Debatt({}) {
 						{/* Disagree */}
 						<div className="w-full border-r h-full flex flex-col justify-start items-center gap-2 px-2 ">
 							<h3 className="italic">Disagree</h3>
-							{info?.disagree?.map((e, i) => {
-								return (
-									<CardSmall
-										title={e.author}
-										body={e.comment}
-										key={i}
-										onClick={() => {
-											setCommentToShow({
-												author: e.author,
-												comment: e.comment,
-											});
-											setCommentModalShowing(true);
-										}}
-									/>
-								);
-							})}
+							{info?.disagree?.length > 0 ? (
+								info?.disagree?.map((e, i) => {
+									return (
+										<CardSmall
+											title={e.author}
+											body={e.comment}
+											key={i}
+											onClick={() => {
+												setCommentToShow({
+													author: e.author,
+													comment: e.comment,
+												});
+												setCommentModalShowing(true);
+											}}
+										/>
+									);
+								})
+							) : (
+								<h4 className="text-opacity-50">
+									No one disagrees!
+								</h4>
+							)}
 						</div>
 						{/* Agree */}
 						<div className="w-full border-l h-full flex flex-col justify-start items-center gap-2 px-2">
 							<h3 className="italic">Agree</h3>
-							{info?.agree?.map((e, i) => {
-								return (
-									<CardSmall
-										title={e.author}
-										body={e.comment}
-										key={i}
-										onClick={() => {
-											setCommentToShow({
-												author: e.author,
-												comment: e.comment,
-											});
-											setCommentModalShowing(true);
-										}}
-									/>
-								);
-							})}
+							{info?.agree?.length > 0 ? (
+								info?.agree?.map((e, i) => {
+									return (
+										<CardSmall
+											title={e.author}
+											body={e.comment}
+											key={i}
+											onClick={() => {
+												setCommentToShow({
+													author: e.author,
+													comment: e.comment,
+												});
+												setCommentModalShowing(true);
+											}}
+										/>
+									);
+								})
+							) : (
+								<h4 className="text-opacity-50">
+									No one agrees!
+								</h4>
+							)}
 						</div>
 					</div>
 				)}
@@ -266,6 +320,23 @@ export default function Debatt({}) {
 				}}
 				title={commentToShow.author}
 				body={commentToShow.comment}
+			/>
+			<ModalError
+				isOpen={isErrorShowing}
+				onClose={() => {
+					setErrorToShow("");
+					setIsErrorShowing(false);
+				}}
+				error={errorToShow}
+			/>
+			<ModalAdmin
+				isOpen={isAdmin && isAdminModalShown}
+				onClose={(e) => {
+					e.stopPropagation();
+					setIsAdminModalShown(false);
+				}}
+				userID={123}
+				postID={123}
 			/>
 		</main>
 	);

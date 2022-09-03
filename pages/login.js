@@ -6,6 +6,7 @@ import ButtonOutline from "../components/buttons/ButtonOutline";
 import LargeContainer from "../components/containers/LargeContainer";
 import TextInput from "../components/inputs/TextInput";
 import Head from "next/head";
+import ModalError from "../components/modals/ModalError";
 
 export default function Login() {
 	// User router
@@ -18,6 +19,10 @@ export default function Login() {
 		password: "",
 	});
 
+	// error modal
+	const [errorToShow, setErrorToShow] = useState("");
+	const [isErrorShowing, setIsErrorShowing] = useState(false);
+
 	// Handle login on submit
 	const handleLogin = async (e) => {
 		e.preventDefault();
@@ -27,9 +32,9 @@ export default function Login() {
 		try {
 			await login(data.email, data.password);
 			router.push("/");
-		} catch (err) {
-			console.log(err);
-			window.alert("Email address not found or passwords do not match!");
+		} catch (e) {
+			setErrorToShow(e);
+			setIsErrorShowing(true);
 		}
 	};
 
@@ -87,6 +92,14 @@ export default function Login() {
 						<a>Create an account</a>
 					</Link>
 				</div>
+				<ModalError
+					isOpen={isErrorShowing}
+					onClose={() => {
+						setErrorToShow("");
+						setIsErrorShowing(false);
+					}}
+					error={errorToShow}
+				/>
 			</main>
 		);
 	} else {

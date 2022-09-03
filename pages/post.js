@@ -9,6 +9,8 @@ import TextInputContainerless from "../components/inputs/TextInputContainerless"
 import useOnScreen from "../components/hooks/useOnScreen";
 import { useRouter } from "next/router";
 import Head from "next/head";
+import Modal from "../components/modals/Modal";
+import ModalStandard from "../components/modals/ModalStandard";
 
 export default function Post() {
 	// Router
@@ -32,36 +34,46 @@ export default function Post() {
 		setRulesModalOpen(false);
 	}, [isSidebarVisible]);
 
-	// Handle post submit
-	async function submitPost(e) {
+	function confirmPost(e) {
 		e.preventDefault();
+
+		setConfirmModalOpen(true);
+	}
+
+	// Handle post submit
+	async function submitPost() {
+		setConfirmModalOpen(false);
 
 		// Here can be performed title, body text limit
 
-		var today = new Date();
-		var dd = String(today.getDate()).padStart(2, "0");
-		var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
-		var yyyy = today.getFullYear();
+		try {
+			var today = new Date();
+			var dd = String(today.getDate()).padStart(2, "0");
+			var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
+			var yyyy = today.getFullYear();
 
-		await setDoc(doc(db, "Debatts", title), {
-			title: title,
-			body: body,
-			author: user.email,
-			agree: [],
-			disagree: [],
-			createdAt: (today = mm + "/" + dd + "/" + yyyy),
-		});
-
-		const debattDoc = doc(db, "Users", user.email);
-
-		await updateDoc(debattDoc, {
-			debatts: arrayUnion({
-				author: user.email,
+			await setDoc(doc(db, "Debatts", title), {
 				title: title,
-			}),
-		});
+				body: body,
+				author: user.email,
+				agree: [],
+				disagree: [],
+				createdAt: (today = mm + "/" + dd + "/" + yyyy),
+			});
 
-		router.push("/");
+			const debattDoc = doc(db, "Users", user.email);
+
+			await updateDoc(debattDoc, {
+				debatts: arrayUnion({
+					author: user.email,
+					title: title,
+				}),
+			});
+
+			router.push("/");
+		} catch (e) {
+			setErrorToShow(`${e.name}: ${e.message}`);
+		}
 	}
 
 	const rules = (
@@ -89,7 +101,7 @@ export default function Post() {
 					<h1 className="text-center decoration-secondary select-none mb-0 col-span-full">
 						Post a Debatts
 					</h1>
-					<form className="col-span-full" onSubmit={submitPost}>
+					<form className="col-span-full" onSubmit={confirmPost}>
 						<LargeContainer className=" text-center mb-2">
 							<div className="relative">
 								{/* Title */}
@@ -153,12 +165,10 @@ export default function Post() {
 					</div>
 				</div>
 				{/* Rules Modal */}
-				<ReactModal
-					overlayClassName="absolute top-0 left-0 w-full h-full bg-black/20 z-50 flex justify-center items-center"
-					className="w-fit h-fit bg-back p-4 rounded-md flex flex-col justify-start items-center relative min-w-[40%] max-w-[80%] shadow"
+				<Modal
 					isOpen={isSidebarVisible ? false : isRulesModalOpen}
 					shouldCloseOnEsc={true}
-					shouldCloseOnOverlayClick={true}
+					shouldCloseOnOverlayClick
 					onRequestClose={() => {
 						setRulesModalOpen(false);
 					}}
@@ -174,31 +184,19 @@ export default function Post() {
 							Close
 						</Button>
 					</div>
-				</ReactModal>
+				</Modal>
 				{/* Confirmation modal*/}
-				<ReactModal
-					overlayClassName="absolute top-0 left-0 w-full h-full bg-black/20 z-50 flex justify-center items-center"
-					className="w-fit h-fit bg-back p-4 rounded-md flex flex-col justify-start items-center relative min-w-[40%] max-w-[80%] shadow"
+				<ModalStandard
 					isOpen={isConfirmModalOpen}
-					shouldCloseOnEsc={true}
-					shouldCloseOnOverlayClick={true}
-					onRequestClose={() => {
-						setRulesModalOpen(false);
-					}}
-					ariaHideApp={true}
-				>
-					<div className="relative w-full flex flex-col justify-start items-start gap-2 p-4 ">
-						{rules}
-						<Button
-							className="place-self-center"
-							onClick={() => {
-								setRulesModalOpen(false);
-							}}
-						>
-							Close
-						</Button>
-					</div>
-				</ReactModal>
+					onClose={() => setConfirmModalOpen(false)}
+					shouldCloseOnEsc
+					shouldCloseOnOverlayClick
+					title="Are You Sure?"
+					body="Once posted, your Debatt will not be able to be edited, so double check for spelling, grammar and coherence!"
+					confirmButton
+					closeButton
+					onConfirm={submitPost}
+				/>
 			</div>
 		);
 	} else {

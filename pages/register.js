@@ -9,6 +9,8 @@ import LargeContainer from "../components/containers/LargeContainer";
 import TextInput from "../components/inputs/TextInput";
 import Checkbox from "../components/inputs/Checkbox";
 import Head from "next/head";
+import ModalStandard from "../components/modals/ModalStandard";
+import ModalError from "../components/modals/ModalError";
 
 export default function Register() {
 	const router = useRouter();
@@ -22,6 +24,10 @@ export default function Register() {
 		password: "",
 		rpassword: "",
 	});
+
+	// error modal
+	const [errorToShow, setErrorToShow] = useState("");
+	const [isErrorShowing, setIsErrorShowing] = useState(false);
 
 	// Handle register on submit
 	const handleRegister = async (e) => {
@@ -49,11 +55,13 @@ export default function Register() {
 
 				router.push("/");
 			} else {
-				window.alert("Passwords do not match!");
+				setErrorToShow("Passwords do not match!");
+				setIsErrorShowing(true);
 				return;
 			}
-		} catch (err) {
-			console.log(err);
+		} catch (e) {
+			setErrorToShow(e);
+			setIsErrorShowing(true);
 		}
 	};
 
@@ -143,7 +151,10 @@ export default function Register() {
 							required
 						></TextInput>
 						<Checkbox required id="TnCs">
-							I agree with the terms and conditions
+							I agree with the{" "}
+							<Link href="/TermsAndConditions" passHref>
+								<a>terms and conditions</a>
+							</Link>
 						</Checkbox>
 						<ButtonOutline type="submit">Submit</ButtonOutline>
 					</form>
@@ -159,6 +170,14 @@ export default function Register() {
 						<a>Go to login page</a>
 					</Link>
 				</div>
+				<ModalError
+					isOpen={isErrorShowing}
+					onClose={() => {
+						setErrorToShow("");
+						setIsErrorShowing(false);
+					}}
+					error={errorToShow}
+				/>
 			</main>
 		);
 	} else {
