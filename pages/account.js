@@ -1,9 +1,18 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { useAuth } from "../context/AuthContext";
-import { doc, getDoc } from "firebase/firestore";
+import {
+  deleteDoc,
+  doc,
+  getDocs,
+  getDoc,
+  collection,
+  updateDoc,
+  arrayRemove,
+} from "firebase/firestore";
 import { db } from "../config/firebase";
 import Head from "next/head";
+import { getAuth, deleteUser } from "firebase/auth";
 
 import LargeContainer from "../components/containers/LargeContainer";
 
@@ -24,6 +33,7 @@ export default function Account() {
     }
   };
 
+  // Check if user is banned
   const checkBannedUser = async () => {
     if (user) {
       const docRef = doc(db, "Users", user?.displayName);
@@ -38,6 +48,53 @@ export default function Account() {
         console.log("No such document!");
       }
     }
+  };
+
+  // Handle delete account
+  const deleteAccount = async () => {
+    const docRef = doc(db, "Users", user?.displayName);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      // Delete user
+      await deleteDoc(doc(db, "Users", user?.displayName));
+    }
+
+    const querySnapshot = await getDocs(collection(db, "Debatts"));
+    querySnapshot.forEach(async (getDoc) => {
+      // Delete posts
+      if (getDoc.data().author === user?.displayName) {
+        await deleteDoc(doc(db, "Debatts", getDoc.data().title));
+      }
+
+      // Delete Agree Comments
+      getDoc.data().agree.map(async (comment, i) => {
+        if (comment.author === user?.displayName) {
+          await updateDoc(doc(db, "Debatts", getDoc.data().title), {
+            agree: arrayRemove(getDoc.data().agree[i]),
+          });
+        }
+      });
+
+      // Delete Disagree Comments
+      getDoc.data().disagree.map(async (comment, i) => {
+        if (comment.author === user?.displayName) {
+          await updateDoc(doc(db, "Debatts", getDoc.data().title), {
+            disagree: arrayRemove(getDoc.data().disagree[i]),
+          });
+        }
+      });
+    });
+
+    let auth = getAuth();
+    let currUser = auth.currentUser;
+
+    // Delete user's obj
+    deleteUser(currUser).catch((error) => {
+      console.log(error.message);
+    });
+
+    router.push("/login");
   };
 
   useEffect(() => {
@@ -69,7 +126,7 @@ export default function Account() {
         <div className="my-1 flex flex-col w-fit">
           <a>Change email</a>
           <a>Change password</a>
-          <a>Delete account</a>
+          <a onClick={() => deleteAccount()}>Delete account</a>
         </div>
       </LargeContainer>
     </main>

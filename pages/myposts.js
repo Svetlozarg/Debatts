@@ -71,8 +71,8 @@ export default function MyPosts() {
         </div>
       )}
 
-      {posts ? (
-        posts.map((e, i) => {
+      {posts?.length !== 0 ? (
+        posts?.map((e, i) => {
           return (
             <Card
               key={i}
