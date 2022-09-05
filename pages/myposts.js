@@ -56,7 +56,8 @@ export default function MyPosts() {
       {posts && (
         <div className="col-span-full relative w-full">
           <h2 className=" text-center">{posts ? "Your Debatts" : ""}</h2>
-          <div className="absolute right-6 top-0">
+          <div className="absolute right-6 top-0 flex justify-center items-center gap-2">
+            <p>My Account</p>
             <Link href="/account/">
               <ButtonActionRound className="w-9 h-9 ">
                 <svg viewBox="0 0 24 24" className="w-8 h-8 ">
