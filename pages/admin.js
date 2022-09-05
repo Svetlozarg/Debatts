@@ -80,7 +80,11 @@ export default function Admin() {
   };
 
   useEffect(() => {
-    fetchStatistics();
+    if (!user) {
+      router.push("/login");
+    } else {
+      fetchStatistics();
+    }
   }, []);
 
   return (
@@ -112,6 +116,7 @@ export default function Admin() {
       </CardContainer>
       <CardContainer hover={false}>
         <h2>Find User</h2>
+        <p>TODO if necessary</p>
       </CardContainer>
       <CardContainer wide hover={false}>
         <h2>Banned Users</h2>
@@ -147,6 +152,7 @@ export default function Admin() {
       </CardContainer>
       <CardContainer hover={false}>
         <h2>Find Post</h2>
+        <p>TODO if necessary</p>
       </CardContainer>
     </main>
   );

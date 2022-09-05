@@ -124,7 +124,9 @@ export default function Account() {
           Account settings
         </div>
         <div className="my-1 flex flex-col w-fit">
+          <p>TODO</p>
           <a>Change email</a>
+          <p>TODO</p>
           <a>Change password</a>
           <a onClick={() => deleteAccount()}>Delete account</a>
         </div>
