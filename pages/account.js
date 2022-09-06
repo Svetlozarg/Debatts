@@ -12,7 +12,12 @@ import {
 } from "firebase/firestore";
 import { db } from "../config/firebase";
 import Head from "next/head";
-import { getAuth, deleteUser } from "firebase/auth";
+import {
+  getAuth,
+  deleteUser,
+  updateEmail,
+  updatePassword,
+} from "firebase/auth";
 
 import LargeContainer from "../components/containers/LargeContainer";
 
@@ -52,6 +57,7 @@ export default function Account() {
 
   // Handle delete account
   const deleteAccount = async () => {
+    // ReAuth!
     const docRef = doc(db, "Users", user?.displayName);
     const docSnap = await getDoc(docRef);
 
@@ -97,6 +103,39 @@ export default function Account() {
     router.push("/login");
   };
 
+  // Handle Change Email
+  const changeEmail = async (newEmail) => {
+    // ReAuth!
+    const auth = getAuth();
+    updateEmail(auth.currentUser, newEmail)
+      .then(async () => {
+        // Update Email
+        await updateDoc(doc(db, "Users", user?.displayName), {
+          email: newEmail,
+        });
+        location.reload;
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  // Handle Change Password
+  const changePassword = async (newPassword) => {
+    // ReAuth!
+    const auth = getAuth();
+    const user = auth.currentUser;
+
+    updatePassword(user, newPassword)
+      .then(() => {
+        logout();
+        router.push("/login");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   useEffect(() => {
     if (!user) {
       router.push("/login");
@@ -113,21 +152,36 @@ export default function Account() {
       </Head>
       <LargeContainer className="col-span-full">
         <h2 className="">{userData?.userName}</h2>
-        <div className="w-full border-b-2 text-gray-400 mt-2">Information</div>
-        <div className="my-1">
-          <p>Username: {userData?.displayName}</p>
-          <p>Full Name: {userData?.fullName}</p>
-          <p>Email Address: {userData?.email}</p>
-          <p>Created at: {userData?.createdAt}</p>
+        <div className="w-full border-b-2 text-gray-400 mt-2 text-center">
+          Information
         </div>
-        <div className="w-full border-b-2 text-gray-400 mt-2">
+        <div className="my-1">
+          <p>
+            <span className="font-semibold">Username:</span>{" "}
+            {userData?.displayName}
+          </p>
+          <p>
+            <span className="font-semibold">Full Name:</span>{" "}
+            {userData?.fullName}
+          </p>
+          <p>
+            <span className="font-semibold">Email Address:</span>{" "}
+            {userData?.email}
+          </p>
+          <p>
+            <span className="font-semibold">Created at:</span>{" "}
+            {userData?.createdAt}
+          </p>
+          <p className="capitalize">
+            <span className="font-semibold">Role:</span> {userData?.role}
+          </p>
+        </div>
+        <div className="w-full border-b-2 text-gray-400 mt-2 text-center">
           Account settings
         </div>
-        <div className="my-1 flex flex-col w-fit">
-          <p>TODO</p>
-          <a>Change email</a>
-          <p>TODO</p>
-          <a>Change password</a>
+        <div className="my-1 flex flex-col align-center justify-center text-center">
+          <a onClick={() => changeEmail()}>Change email</a>
+          <a onClick={() => changePassword()}>Change password</a>
           <a onClick={() => deleteAccount()}>Delete account</a>
         </div>
       </LargeContainer>

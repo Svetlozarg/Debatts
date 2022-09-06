@@ -5,6 +5,7 @@ import { useAuth } from "../context/AuthContext";
 import { useRouter } from "next/router";
 import { collection, getDocs, doc, getDoc } from "firebase/firestore";
 import { db } from "../config/firebase";
+import loadCustomRoutes from "next/dist/lib/load-custom-routes";
 
 export default function Home() {
   // User obj
@@ -13,6 +14,7 @@ export default function Home() {
   const router = useRouter();
   // State to store debatts
   const [debatts, setDebatts] = useState([]);
+  const [numberPosts, setNumberPosts] = useState(23);
 
   const fetchDebatts = async () => {
     const querySnapshot = await getDocs(collection(db, "Debatts"));
@@ -20,6 +22,13 @@ export default function Home() {
     querySnapshot.forEach((doc) => {
       debattsArr.push(doc.data());
     });
+    debattsArr.sort((a, b) => {
+      var dateA = new Date(a.createdAt);
+      var dateB = new Date(b.createdAt);
+
+      return dateA < dateB ? 1 : -1;
+    });
+    console.log(debattsArr.length);
     setDebatts(debattsArr);
   };
 
@@ -39,6 +48,11 @@ export default function Home() {
     }
   };
 
+  // Handle Load More Posts
+  const loadMorePosts = () => {
+    setNumberPosts((prevValue) => prevValue + 10);
+  };
+
   useEffect(() => {
     checkBannedUser();
     fetchDebatts();
@@ -54,7 +68,7 @@ export default function Home() {
 
       {/* Home */}
       <main>
-        {debatts.map((e, i) => {
+        {debatts.slice(0, numberPosts).map((e, i) => {
           return (
             <Card
               key={i}
@@ -68,6 +82,18 @@ export default function Home() {
           );
         })}
       </main>
+
+      {/* Load More Posts Button */}
+      {debatts.length > 23 && debatts.length >= numberPosts && (
+        <div className="flex justify-center align-center mb-6">
+          <button
+            className="transition ease-in-out duration-250 bg-transparent hover:bg-blue-700 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-700 hover:border-transparent rounded"
+            onClick={loadMorePosts}
+          >
+            Load More
+          </button>
+        </div>
+      )}
     </div>
   );
 }

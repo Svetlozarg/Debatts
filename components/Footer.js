@@ -25,26 +25,32 @@ export default function Footer() {
               <a>Home</a>
             </Link>
           </ul>
-          <ul>
-            <Link
-              href={{
-                pathname: "/account",
-              }}
-              passHref={true}
-            >
-              <a>My Account</a>
-            </Link>
-          </ul>
-          <ul>
-            <Link
-              href={{
-                pathname: "/",
-              }}
-              passHref={true}
-            >
-              <a>Post a Debatts</a>
-            </Link>
-          </ul>
+          {user && (
+            <ul>
+              <Link
+                href={{
+                  pathname: "/account",
+                }}
+                passHref={true}
+              >
+                <a>My Account</a>
+              </Link>
+            </ul>
+          )}
+
+          {user && (
+            <ul>
+              <Link
+                href={{
+                  pathname: "/",
+                }}
+                passHref={true}
+              >
+                <a>Post a Debatts</a>
+              </Link>
+            </ul>
+          )}
+
           <ul>
             <Link
               href={{
@@ -55,11 +61,37 @@ export default function Footer() {
               <a>Instagram</a>
             </Link>
           </ul>
-          <ul>
-            <a className="cursor-pointer" onClick={() => logout()}>
-              Log out
-            </a>
-          </ul>
+          {user && (
+            <ul>
+              <a className="cursor-pointer" onClick={() => logout()}>
+                Log out
+              </a>
+            </ul>
+          )}
+          {!user && (
+            <ul>
+              <Link
+                href={{
+                  pathname: "/login",
+                }}
+                passHref={true}
+              >
+                <a>Log in</a>
+              </Link>
+            </ul>
+          )}
+          {!user && (
+            <ul>
+              <Link
+                href={{
+                  pathname: "/register",
+                }}
+                passHref={true}
+              >
+                <a>Register</a>
+              </Link>
+            </ul>
+          )}
         </li>
 
         {/* Line */}

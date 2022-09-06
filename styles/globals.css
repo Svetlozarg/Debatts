@@ -143,3 +143,15 @@ body {
 	padding: 5px 9px;
 	z-index: 1;
 }
+
+.active-page {
+	color: #fff;
+	background-color: #0050f5;
+	border-radius: 5px;
+}
+
+.active-page:hover {
+	color: #fff;
+	background-color: #0050f5;
+	border-radius: 5px;
+}

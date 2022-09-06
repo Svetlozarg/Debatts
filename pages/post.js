@@ -71,6 +71,10 @@ export default function Post() {
       var dd = String(today.getDate()).padStart(2, "0");
       var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
       var yyyy = today.getFullYear();
+      var hour = (today.getHours() < 10 ? "0" : "") + today.getHours();
+      var minutes = (today.getMinutes() < 10 ? "0" : "") + today.getMinutes();
+      var seconds = (today.getSeconds() < 10 ? "0" : "") + today.getSeconds();
+      var time = hour + ":" + minutes + ":" + seconds;
 
       // Create Post
       await setDoc(doc(db, "Debatts", title), {
@@ -79,7 +83,7 @@ export default function Post() {
         author: user?.displayName,
         agree: [],
         disagree: [],
-        createdAt: (today = mm + "/" + dd + "/" + yyyy),
+        createdAt: (today = mm + "/" + dd + "/" + yyyy + " " + time),
       });
 
       // Update user debatt's array
