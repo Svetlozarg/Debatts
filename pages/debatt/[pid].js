@@ -110,6 +110,7 @@ export default function Debatt({}) {
     }
   };
 
+  // Chech if user is banned
   const checkBannedUser = async () => {
     if (user) {
       const docRef = doc(db, "Users", user?.displayName);

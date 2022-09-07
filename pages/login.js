@@ -50,6 +50,7 @@ export default function Login() {
           <h1 className="text-center underline decoration-secondary select-none">
             Login Page
           </h1>
+          {/* Login Form */}
           <form className="grid gap-6" onSubmit={handleLogin}>
             {/* Email */}
             <TextInput

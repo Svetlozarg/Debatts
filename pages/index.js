@@ -16,6 +16,7 @@ export default function Home() {
   const [debatts, setDebatts] = useState([]);
   const [numberPosts, setNumberPosts] = useState(23);
 
+  // Fetch Debatts
   const fetchDebatts = async () => {
     const querySnapshot = await getDocs(collection(db, "Debatts"));
     const debattsArr = [];
@@ -28,10 +29,10 @@ export default function Home() {
 
       return dateA < dateB ? 1 : -1;
     });
-    console.log(debattsArr.length);
     setDebatts(debattsArr);
   };
 
+  // Check if user is banned
   const checkBannedUser = async () => {
     if (user) {
       const docRef = doc(db, "Users", user?.displayName);

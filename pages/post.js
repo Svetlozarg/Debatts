@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect } from "react";
-import ReactModal from "react-modal";
 import { useAuth } from "../context/AuthContext";
 import { doc, setDoc, updateDoc, arrayUnion, getDoc } from "firebase/firestore";
 import { db } from "../config/firebase";
@@ -30,6 +29,7 @@ export default function Post() {
   const sidebarRulesRef = useRef();
   const isSidebarVisible = useOnScreen(sidebarRulesRef);
 
+  // Check if user is banned
   const checkBannedUser = async () => {
     if (user) {
       const docRef = doc(db, "Users", user?.displayName);
@@ -54,6 +54,7 @@ export default function Post() {
     checkBannedUser();
   }, []);
 
+  // Confirm Post Popup
   function confirmPost(e) {
     e.preventDefault();
 
@@ -128,6 +129,7 @@ export default function Post() {
           <h1 className="text-center decoration-secondary select-none mb-0 col-span-full">
             Post a Debatts
           </h1>
+          {/* Post Debatts Form */}
           <form className="col-span-full" onSubmit={confirmPost}>
             <LargeContainer className=" text-center mb-2">
               <div className="relative">

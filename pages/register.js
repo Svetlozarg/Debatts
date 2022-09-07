@@ -9,7 +9,6 @@ import LargeContainer from "../components/containers/LargeContainer";
 import TextInput from "../components/inputs/TextInput";
 import Checkbox from "../components/inputs/Checkbox";
 import Head from "next/head";
-import ModalStandard from "../components/modals/ModalStandard";
 import ModalError from "../components/modals/ModalError";
 import { getAuth, updateProfile } from "firebase/auth";
 
@@ -26,7 +25,7 @@ export default function Register() {
     rpassword: "",
   });
 
-  // error modal
+  // Error modal
   const [errorToShow, setErrorToShow] = useState("");
   const [isErrorShowing, setIsErrorShowing] = useState(false);
 
@@ -84,6 +83,7 @@ export default function Register() {
           <h1 className="text-center underline decoration-secondary select-none">
             Register Page
           </h1>
+          {/* Register Form */}
           <form className="grid gap-6" onSubmit={handleRegister}>
             {/* Full Name */}
             <TextInput

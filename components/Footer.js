@@ -1,9 +1,12 @@
 import Link from "next/link";
 import { useAuth } from "../context/AuthContext";
 import Logo from "./Logo";
+import { useRouter } from "next/router";
 
 export default function Footer() {
   const { user, logout } = useAuth();
+  // Router
+  const router = useRouter();
 
   return (
     <footer className="bg-backAccent p-8 mt-auto">
@@ -63,7 +66,13 @@ export default function Footer() {
           </ul>
           {user && (
             <ul>
-              <a className="cursor-pointer" onClick={() => logout()}>
+              <a
+                className="cursor-pointer"
+                onClick={() => {
+                  logout();
+                  router.push("/login");
+                }}
+              >
                 Log out
               </a>
             </ul>
