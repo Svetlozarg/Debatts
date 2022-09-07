@@ -12,221 +12,228 @@ import Modal from "../components/modals/Modal";
 import ModalStandard from "../components/modals/ModalStandard";
 
 export default function Post() {
-  // Router
-  const router = useRouter();
-  // User obj
-  const { user, logout } = useAuth();
-  // State for post title
-  const [title, setTitle] = useState("");
-  // State for post description
-  const [body, setBody] = useState("");
+	// Router
+	const router = useRouter();
+	// User obj
+	const { user, logout } = useAuth();
+	// State for post title
+	const [title, setTitle] = useState("");
+	// State for post description
+	const [body, setBody] = useState("");
 
-  // Modal States
-  const [isConfirmModalOpen, setConfirmModalOpen] = useState(false);
-  const [isRulesModalOpen, setRulesModalOpen] = useState(false);
+	// Modal States
+	const [isConfirmModalOpen, setConfirmModalOpen] = useState(false);
+	const [isRulesModalOpen, setRulesModalOpen] = useState(false);
 
-  // Used to check if the rules sidebar is showing or not
-  const sidebarRulesRef = useRef();
-  const isSidebarVisible = useOnScreen(sidebarRulesRef);
+	// Used to check if the rules sidebar is showing or not
+	const sidebarRulesRef = useRef();
+	const isSidebarVisible = useOnScreen(sidebarRulesRef);
 
-  // Check if user is banned
-  const checkBannedUser = async () => {
-    if (user) {
-      const docRef = doc(db, "Users", user?.displayName);
-      const docSnap = await getDoc(docRef);
+	// Check if user is banned
+	const checkBannedUser = async () => {
+		if (user) {
+			const docRef = doc(db, "Users", user?.displayName);
+			const docSnap = await getDoc(docRef);
 
-      if (docSnap.exists()) {
-        if (docSnap.data().banned && docSnap.data().banned !== undefined) {
-          alert("You are banned");
-          logout();
-        }
-      } else {
-        console.log("No such document!");
-      }
-    }
-  };
+			if (docSnap.exists()) {
+				if (
+					docSnap.data().banned &&
+					docSnap.data().banned !== undefined
+				) {
+					alert("You are banned");
+					logout();
+				}
+			} else {
+				console.log("No such document!");
+			}
+		}
+	};
 
-  useEffect(() => {
-    setRulesModalOpen(false);
-  }, [isSidebarVisible]);
+	useEffect(() => {
+		setRulesModalOpen(false);
+	}, [isSidebarVisible]);
 
-  useEffect(() => {
-    checkBannedUser();
-  }, []);
+	useEffect(() => {
+		checkBannedUser();
+	}, []);
 
-  // Confirm Post Popup
-  function confirmPost(e) {
-    e.preventDefault();
+	// Confirm Post Popup
+	function confirmPost(e) {
+		e.preventDefault();
 
-    setConfirmModalOpen(true);
-  }
+		setConfirmModalOpen(true);
+	}
 
-  // Handle post submit
-  async function submitPost() {
-    setConfirmModalOpen(false);
+	// Handle post submit
+	async function submitPost() {
+		setConfirmModalOpen(false);
 
-    // Here can be performed title, body text limit
+		// Here can be performed title, body text limit
 
-    try {
-      var today = new Date();
-      var dd = String(today.getDate()).padStart(2, "0");
-      var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
-      var yyyy = today.getFullYear();
-      var hour = (today.getHours() < 10 ? "0" : "") + today.getHours();
-      var minutes = (today.getMinutes() < 10 ? "0" : "") + today.getMinutes();
-      var seconds = (today.getSeconds() < 10 ? "0" : "") + today.getSeconds();
-      var time = hour + ":" + minutes + ":" + seconds;
+		try {
+			var today = new Date();
+			var dd = String(today.getDate()).padStart(2, "0");
+			var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
+			var yyyy = today.getFullYear();
+			var hour = (today.getHours() < 10 ? "0" : "") + today.getHours();
+			var minutes =
+				(today.getMinutes() < 10 ? "0" : "") + today.getMinutes();
+			var seconds =
+				(today.getSeconds() < 10 ? "0" : "") + today.getSeconds();
+			var time = hour + ":" + minutes + ":" + seconds;
 
-      // Create Post
-      await setDoc(doc(db, "Debatts", title), {
-        title: title,
-        body: body,
-        author: user?.displayName,
-        agree: [],
-        disagree: [],
-        createdAt: (today = mm + "/" + dd + "/" + yyyy + " " + time),
-      });
+			// Create Post
+			await setDoc(doc(db, "Debatts", title), {
+				title: title,
+				body: body,
+				author: user?.displayName,
+				agree: [],
+				disagree: [],
+				createdAt: (today = mm + "/" + dd + "/" + yyyy + " " + time),
+			});
 
-      // Update user debatt's array
-      const debattDoc = doc(db, "Users", user?.displayName);
+			// Update user debatt's array
+			const debattDoc = doc(db, "Users", user?.displayName);
 
-      await updateDoc(debattDoc, {
-        debatts: arrayUnion({
-          author: user?.displayName,
-          title: title,
-          body: body,
-        }),
-      });
+			await updateDoc(debattDoc, {
+				debatts: arrayUnion({
+					author: user?.displayName,
+					title: title,
+					body: body,
+				}),
+			});
 
-      router.push("/");
-    } catch (e) {
-      // setErrorToShow(`${e.name}: ${e.message}`);
-    }
-  }
+			router.push("/");
+		} catch (e) {
+			// setErrorToShow(`${e.name}: ${e.message}`);
+		}
+	}
 
-  const rules = (
-    <div className="w-full ">
-      <h1 className="text-center underline">Rules</h1>
-      <p className="font-bold">write your rules here...</p>
-      <ul className="list-decimal ml-6">
-        <ul className="list-disc">
-          <li>rule 1</li>
-          <li>rule 2</li>
-          <li>rule 3</li>
-        </ul>
-      </ul>
-    </div>
-  );
+	const rules = (
+		<div className="w-full ">
+			<h1 className="text-center underline">Rules</h1>
+			<p className="font-bold">write your rules here...</p>
+			<ul className="list-decimal ml-6">
+				<ul className="list-disc">
+					<li>rule 1</li>
+					<li>rule 2</li>
+					<li>rule 3</li>
+				</ul>
+			</ul>
+		</div>
+	);
 
-  if (user) {
-    return (
-      <div className="flex flex-row justify-between items-start">
-        <Head>
-          <title>Debatts · Post</title>
-        </Head>
-        <div className="hidden flex-grow lg:flex"></div>
-        <main className="max-w-xl">
-          <h1 className="text-center decoration-secondary select-none mb-0 col-span-full">
-            Post a Debatts
-          </h1>
-          {/* Post Debatts Form */}
-          <form className="col-span-full" onSubmit={confirmPost}>
-            <LargeContainer className=" text-center mb-2">
-              <div className="relative">
-                {/* Title */}
-                <TextInputContainerless
-                  required
-                  placeholder="Title..."
-                  className="text-xl text-center overflow-hidden underline decoration-black"
-                  containerClassName="pb-2 mb-2 overflow-none"
-                  onChange={(e) => {
-                    // auto adjust height
-                    e.currentTarget.style.height = "";
-                    e.currentTarget.style.height =
-                      e.currentTarget.scrollHeight + "px";
-                    setTitle(e.target.value);
-                  }}
-                  characterLimit={100}
-                />
-                <div className="absolute h-1.5 w-[30%] bg-secondary -left-4 bottom-0"></div>
-              </div>
+	if (user) {
+		return (
+			<div className="flex flex-row justify-between items-start">
+				<Head>
+					<title>Debatts · Post</title>
+				</Head>
+				<div className="hidden flex-grow lg:flex"></div>
+				<main className="max-w-xl">
+					<h1 className="text-center decoration-secondary select-none mb-0 col-span-full">
+						Post a Debatts
+					</h1>
+					{/* Post Debatts Form */}
+					<form className="col-span-full" onSubmit={confirmPost}>
+						<LargeContainer className=" text-center mb-2">
+							<div className="relative">
+								{/* Title */}
+								<TextInputContainerless
+									required
+									placeholder="Title..."
+									className="text-xl text-center overflow-hidden underline decoration-black"
+									containerClassName="pb-2 mb-2 overflow-none"
+									onChange={(e) => {
+										// auto adjust height
+										e.currentTarget.style.height = "";
+										e.currentTarget.style.height =
+											e.currentTarget.scrollHeight + "px";
+										setTitle(e.target.value);
+									}}
+									characterLimit={100}
+								/>
+								<div className="absolute h-1.5 w-[30%] bg-secondary -left-4 bottom-0"></div>
+							</div>
 
-              {/* Description */}
-              <TextInputContainerless
-                required
-                placeholder="Say something about it"
-                className="text-md text-left max-h-[40vh] bg-backAccent rounded-md shadow-inner"
-                containerClassName="pb-2 mb-2 overflow-none "
-                onChange={(e) => {
-                  // auto adjust height
-                  e.currentTarget.style.height = "";
-                  e.currentTarget.style.height =
-                    e.currentTarget.scrollHeight + "px";
-                  setBody(e.target.value);
-                }}
-                characterLimit={2000}
-              />
-            </LargeContainer>
+							{/* Description */}
+							<TextInputContainerless
+								required
+								placeholder="Say something about it"
+								className="text-md text-left max-h-[40vh] bg-backAccent rounded-md shadow-inner"
+								containerClassName="pb-2 mb-2 overflow-none "
+								onChange={(e) => {
+									// auto adjust height
+									e.currentTarget.style.height = "";
+									e.currentTarget.style.height =
+										e.currentTarget.scrollHeight + "px";
+									setBody(e.target.value);
+								}}
+								characterLimit={2000}
+							/>
+						</LargeContainer>
 
-            <div className="col-span-full flex justify-between">
-              <Button
-                className="lg:hidden"
-                onClick={() => {
-                  setRulesModalOpen(true);
-                }}
-              >
-                Read Rules
-              </Button>
-              <div className="hidden lg:block"></div>
-              <Button type="submit">Post</Button>
-            </div>
-          </form>
-        </main>
-        <div
-          className="relative hidden flex-grow lg:flex"
-          ref={sidebarRulesRef}
-        >
-          {/* Rules section */}
-          <div className="w-full absolute left-0 top-[4.5rem] right-0 p-2">
-            <LargeContainer className="max-w-[300px]">{rules}</LargeContainer>
-          </div>
-        </div>
-        {/* Rules Modal */}
-        <Modal
-          isOpen={isSidebarVisible ? false : isRulesModalOpen}
-          shouldCloseOnEsc={true}
-          shouldCloseOnOverlayClick
-          onRequestClose={() => {
-            setRulesModalOpen(false);
-          }}
-        >
-          <div className="relative w-full flex flex-col justify-start items-start gap-2 p-4 ">
-            {rules}
-            <Button
-              className="place-self-center"
-              onClick={() => {
-                setRulesModalOpen(false);
-              }}
-            >
-              Close
-            </Button>
-          </div>
-        </Modal>
-        {/* Confirmation modal*/}
-        <ModalStandard
-          isOpen={isConfirmModalOpen}
-          onClose={() => setConfirmModalOpen(false)}
-          shouldCloseOnEsc
-          shouldCloseOnOverlayClick
-          title="Are You Sure?"
-          body="Once posted, your Debatt will not be able to be edited, so double check for spelling, grammar and coherence!"
-          confirmButton
-          closeButton
-          onConfirm={submitPost}
-        />
-      </div>
-    );
-  } else {
-    router.push("/login");
-  }
+						<div className="col-span-full flex justify-between">
+							<Button
+								className="lg:hidden"
+								onClick={() => {
+									setRulesModalOpen(true);
+								}}
+							>
+								Read Rules
+							</Button>
+							<div className="hidden lg:block"></div>
+							<Button type="submit">Post</Button>
+						</div>
+					</form>
+				</main>
+				<div
+					className="relative hidden flex-grow lg:flex"
+					ref={sidebarRulesRef}
+				>
+					{/* Rules section */}
+					<div className="w-full absolute left-0 top-[4.5rem] right-0 p-2">
+						<LargeContainer className="max-w-[300px]">
+							{rules}
+						</LargeContainer>
+					</div>
+				</div>
+				{/* Rules Modal */}
+				<Modal
+					isOpen={isSidebarVisible ? false : isRulesModalOpen}
+					shouldCloseOnEsc={true}
+					shouldCloseOnOverlayClick
+					onRequestClose={() => {
+						setRulesModalOpen(false);
+					}}
+				>
+					<div className="relative w-full flex flex-col justify-start items-start gap-2 p-4 ">
+						{rules}
+						<Button
+							className="place-self-center"
+							onClick={() => {
+								setRulesModalOpen(false);
+							}}
+						>
+							Close
+						</Button>
+					</div>
+				</Modal>
+				{/* Confirmation modal*/}
+				<ModalStandard
+					isOpen={isConfirmModalOpen}
+					onClose={() => setConfirmModalOpen(false)}
+					shouldCloseOnEsc
+					shouldCloseOnOverlayClick
+					title="Are You Sure?"
+					body="Once posted, your Debatt will not be able to be edited, so double check for spelling, grammar and coherence!"
+					confirmButton
+					closeButton
+					onConfirm={submitPost}
+				/>
+			</div>
+		);
+	} else {
+		router.push("/login");
+	}
 }
