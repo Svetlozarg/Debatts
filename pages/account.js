@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
-import { useRouter } from "next/router";
-import { useAuth } from "../context/AuthContext";
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
+import { useAuth } from '../context/AuthContext';
 import {
   deleteDoc,
   doc,
@@ -9,17 +9,19 @@ import {
   collection,
   updateDoc,
   arrayRemove,
-} from "firebase/firestore";
-import { db } from "../config/firebase";
-import Head from "next/head";
+} from 'firebase/firestore';
+import { db } from '../config/firebase';
+import Head from 'next/head';
 import {
   getAuth,
   deleteUser,
   updateEmail,
   updatePassword,
-} from "firebase/auth";
+  EmailAuthProvider,
+  reauthenticateWithCredential,
+} from 'firebase/auth';
 
-import LargeContainer from "../components/containers/LargeContainer";
+import LargeContainer from '../components/containers/LargeContainer';
 
 export default function Account() {
   const { user, logout } = useAuth();
@@ -29,13 +31,13 @@ export default function Account() {
   // Fetch user data
   const handleUserData = async () => {
     if (user) {
-      const docRef = doc(db, "Users", user.displayName);
+      const docRef = doc(db, 'Users', user.displayName);
       const docSnap = await getDoc(docRef);
 
       if (docSnap.exists()) {
         setUserData(docSnap.data());
       } else {
-        console.log("No such document!");
+        console.log('No such document!');
       }
     }
   };
@@ -43,16 +45,16 @@ export default function Account() {
   // Check if user is banned
   const checkBannedUser = async () => {
     if (user) {
-      const docRef = doc(db, "Users", user?.displayName);
+      const docRef = doc(db, 'Users', user?.displayName);
       const docSnap = await getDoc(docRef);
 
       if (docSnap.exists()) {
         if (docSnap.data().banned && docSnap.data().banned !== undefined) {
-          alert("You are banned");
+          alert('You are banned');
           logout();
         }
       } else {
-        console.log("No such document!");
+        console.log('No such document!');
       }
     }
   };
@@ -60,25 +62,25 @@ export default function Account() {
   // Handle delete account
   const deleteAccount = async () => {
     // ReAuth!
-    const docRef = doc(db, "Users", user?.displayName);
+    const docRef = doc(db, 'Users', user?.displayName);
     const docSnap = await getDoc(docRef);
 
     if (docSnap.exists()) {
       // Delete user
-      await deleteDoc(doc(db, "Users", user?.displayName));
+      await deleteDoc(doc(db, 'Users', user?.displayName));
     }
 
-    const querySnapshot = await getDocs(collection(db, "Debatts"));
+    const querySnapshot = await getDocs(collection(db, 'Debatts'));
     querySnapshot.forEach(async (getDoc) => {
       // Delete posts
       if (getDoc.data().author === user?.displayName) {
-        await deleteDoc(doc(db, "Debatts", getDoc.data().title));
+        await deleteDoc(doc(db, 'Debatts', getDoc.data().title));
       }
 
       // Delete Agree Comments
       getDoc.data().agree.map(async (comment, i) => {
         if (comment.author === user?.displayName) {
-          await updateDoc(doc(db, "Debatts", getDoc.data().title), {
+          await updateDoc(doc(db, 'Debatts', getDoc.data().title), {
             agree: arrayRemove(getDoc.data().agree[i]),
           });
         }
@@ -87,7 +89,7 @@ export default function Account() {
       // Delete Disagree Comments
       getDoc.data().disagree.map(async (comment, i) => {
         if (comment.author === user?.displayName) {
-          await updateDoc(doc(db, "Debatts", getDoc.data().title), {
+          await updateDoc(doc(db, 'Debatts', getDoc.data().title), {
             disagree: arrayRemove(getDoc.data().disagree[i]),
           });
         }
@@ -102,45 +104,92 @@ export default function Account() {
       console.log(error.message);
     });
 
-    router.push("/login");
+    router.push('/login');
   };
 
   // Handle Change Email
-  const changeEmail = async (newEmail) => {
-    // ReAuth!
-    const auth = getAuth();
-    updateEmail(auth.currentUser, newEmail)
-      .then(async () => {
-        // Update Email
-        await updateDoc(doc(db, "Users", user?.displayName), {
-          email: newEmail,
-        });
-        location.reload;
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
-
-  // Handle Change Password
-  const changePassword = async (newPassword) => {
-    // ReAuth!
+  const changeEmail = async () => {
     const auth = getAuth();
     const user = auth.currentUser;
 
-    updatePassword(user, newPassword)
-      .then(() => {
-        logout();
-        router.push("/login");
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    const { email } = user;
+
+    // Prompt for current password
+    const password = prompt('Type your current password');
+
+    const credentials = EmailAuthProvider.credential(email, password);
+
+    // Prompt for new email
+    const newEmail = prompt('Type your new email');
+    // Prompt for repeat new email
+    const repeatNewEmail = prompt('Repeat your new email');
+
+    // Check if emails match
+    if (newEmail === repeatNewEmail) {
+      // Reauth user with email and password
+      await reauthenticateWithCredential(user, credentials)
+        .then(async () => {
+          // Update new email
+          await updateEmail(auth.currentUser, newEmail).catch((error) => {
+            console.log(error.message);
+          });
+
+          await updateDoc(doc(db, 'Users', user?.displayName), {
+            email: newEmail,
+          });
+
+          location.reload();
+        })
+        .catch((error) => {
+          console.log(error.message);
+        });
+    } else {
+      alert('Emails do not match');
+    }
+  };
+
+  // Handle Change Password
+  const changePassword = async () => {
+    const auth = getAuth();
+    const user = auth.currentUser;
+
+    const { email } = user;
+
+    // Prompt for current password
+    const password = prompt('Type your current password');
+
+    const credentials = EmailAuthProvider.credential(email, password);
+
+    // Prompt for new password
+    const newPassword = prompt('Type your new password');
+    // Prompt for repeat new password
+    const repeatNewPassword = prompt('Repeat your new password');
+
+    // Check if password match
+    if (newPassword === repeatNewPassword) {
+      // Reauth user with password and password
+      await reauthenticateWithCredential(user, credentials)
+        .then(async () => {
+          // Update new password
+          await updatePassword(auth.currentUser, newPassword).catch((error) => {
+            console.log(error.message);
+          });
+
+          logout();
+
+          location.reload();
+        })
+        .catch((error) => {
+          console.log(error.message);
+        });
+    } else {
+      alert('Emails do not match');
+    }
   };
 
   useEffect(() => {
     if (!user) {
-      router.push("/login");
+      router.push('/login');
     } else {
       checkBannedUser();
       handleUserData();
@@ -148,49 +197,49 @@ export default function Account() {
   }, []);
 
   return (
-    <main className="max-w-lg">
+    <main className='max-w-lg'>
       <Head>
         <title>Debatts · Admin Panel</title>
       </Head>
-      <LargeContainer className="col-span-full">
-        <h2 className="">{userData?.userName}</h2>
-        <div className="w-full border-b-2 text-gray-400 mt-2 text-center">
+      <LargeContainer className='col-span-full'>
+        <h2 className=''>{userData?.userName}</h2>
+        <div className='w-full border-b-2 text-gray-400 mt-2 text-center'>
           Information
         </div>
         {/* User Information */}
-        <div className="my-1">
+        <div className='my-1'>
           {/* Username */}
           <p>
-            <span className="font-semibold">Username:</span>{" "}
+            <span className='font-semibold'>Username:</span>{' '}
             {userData?.displayName}
           </p>
           {/* Full Name */}
           <p>
-            <span className="font-semibold">Full Name:</span>{" "}
+            <span className='font-semibold'>Full Name:</span>{' '}
             {userData?.fullName}
           </p>
           {/* Email Address */}
           <p>
-            <span className="font-semibold">Email Address:</span>{" "}
+            <span className='font-semibold'>Email Address:</span>{' '}
             {userData?.email}
           </p>
           {/* Created At */}
           <p>
-            <span className="font-semibold">Created at:</span>{" "}
+            <span className='font-semibold'>Created at:</span>{' '}
             {userData?.createdAt}
           </p>
           {/* Role */}
-          <p className="capitalize">
-            <span className="font-semibold">Role:</span> {userData?.role}
+          <p className='capitalize'>
+            <span className='font-semibold'>Role:</span> {userData?.role}
           </p>
         </div>
 
         {/* Account Settings */}
-        <div className="w-full border-b-2 text-gray-400 mt-2 text-center">
+        <div className='w-full border-b-2 text-gray-400 mt-2 text-center'>
           Account Settings
         </div>
         {/* Account Button */}
-        <div className="my-1 flex flex-col align-center justify-center text-center">
+        <div className='my-1 flex flex-col align-center justify-center text-center'>
           {/* Change Email */}
           <a onClick={() => changeEmail()}>Change email</a>
           {/* Change Password */}
