@@ -72,7 +72,7 @@ export default function Home() {
         <link rel='icon' href='/favicon.ico' />
       </Head>
 
-      {loading && <div class='spinner'></div>}
+      {loading && <div className='spinner'></div>}
 
       {/* Home */}
       <main>
