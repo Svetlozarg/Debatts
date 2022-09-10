@@ -94,7 +94,7 @@ export default function Register() {
         var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
         var yyyy = today.getFullYear();
 
-        if (data?.userName !== undefined) {
+        if (data?.userName !== undefined && data?.userName !== '') {
           await setDoc(doc(db, 'Users', data?.userName), {
             fullName: data?.fullName,
             displayName: data?.userName,
@@ -106,16 +106,14 @@ export default function Register() {
             createdAt: (today = mm + '/' + dd + '/' + yyyy),
           })
             .then(async () => {
-              await register(data?.email, data?.password);
-            })
-            .then(() => {
+              await register(data?.email, data?.password);\
+
               const auth = getAuth();
 
               updateProfile(auth?.currentUser, {
                 displayName: data?.userName,
               });
-            })
-            .then(() => {
+            }).then(() => {
               location.reload();
 
               setTimeout(() => {
