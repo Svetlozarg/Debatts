@@ -106,14 +106,15 @@ export default function Register() {
             createdAt: (today = mm + '/' + dd + '/' + yyyy),
           })
             .then(async () => {
-              await register(data?.email, data?.password);\
+              await register(data?.email, data?.password);
 
               const auth = getAuth();
 
               updateProfile(auth?.currentUser, {
                 displayName: data?.userName,
               });
-            }).then(() => {
+            })
+            .then(() => {
               location.reload();
 
               setTimeout(() => {
