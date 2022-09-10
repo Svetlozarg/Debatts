@@ -195,7 +195,7 @@ export default function Debatt({}) {
 				</h1>
 				<h2 className="text-xl italic">{info?.author}</h2>
 				<div className="rounded-md bg-backAccent w-full  min-h-[200px] p-2 shadow">
-					<p className="font-mono">{info?.body}</p>
+					<p className="font-mono text-sm">{info?.body}</p>
 				</div>
 				<div className="w-full flex flex-row justify-between items-center mt-4 mb-8">
 					{/* Comment Button */}

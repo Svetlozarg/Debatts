@@ -52,7 +52,7 @@ export default function Card({ title, body, wide, id, author, createdAt }) {
 			<div className="max-h-[210px] relative overflow-ellipsis">
 				{/* Post Content */}
 				<div className="relative px-6">
-					<h2 className="text-lg text-center font-medium pb-2">
+					<h2 className="text-base text-center font-medium pb-2">
 						{title.length > 47
 							? title.substring(0, 47) + "..."
 							: title}
@@ -67,12 +67,12 @@ export default function Card({ title, body, wide, id, author, createdAt }) {
 					ellipsis="..."
 					trimRight
 					basedOn="letters"
-					className="overflow-hidden"
+					className="overflow-hidden text-sm font-mono"
 				/>
 			</div>
 
 			{/* Post Information */}
-			<div className="w-full h-auto bg-backAccent p-1 gap-1 border-t-2 flex flex-row justify-between items-center text-sm [&>*]:text-opacity-60">
+			<div className="w-full h-auto bg-backAccent p-1 gap-1 border-t-2 flex flex-row justify-between items-center text-sm [&>*]:text-opacity-60 mt-1">
 				<p>{author}</p>
 				<p>{createdAt}</p>
 			</div>

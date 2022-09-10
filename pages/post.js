@@ -141,7 +141,7 @@ export default function Post() {
 								{/* Title */}
 								<TextInputContainerless
 									required
-									placeholder="Title..."
+									placeholder="Add Short title..."
 									className="text-xl text-center overflow-hidden underline decoration-black"
 									containerClassName="pb-2 mb-2 overflow-none"
 									onChange={(e) => {
@@ -151,7 +151,7 @@ export default function Post() {
 											e.currentTarget.scrollHeight + "px";
 										setTitle(e.target.value);
 									}}
-									characterLimit={100}
+									characterLimit={50}
 								/>
 								<div className="absolute h-1.5 w-[30%] bg-secondary -left-4 bottom-0"></div>
 							</div>
