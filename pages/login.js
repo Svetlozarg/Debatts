@@ -7,6 +7,7 @@ import LargeContainer from '../components/containers/LargeContainer';
 import TextInput from '../components/inputs/TextInput';
 import Head from 'next/head';
 import ModalError from '../components/modals/ModalError';
+import { getAuth, sendPasswordResetEmail } from 'firebase/auth';
 
 export default function Login() {
   // User router
@@ -36,6 +37,20 @@ export default function Login() {
       setErrorToShow(e);
       setIsErrorShowing(true);
     }
+  };
+
+  const ressetPassword = async () => {
+    const auth = getAuth();
+
+    const email = prompt('Please type your email');
+
+    sendPasswordResetEmail(auth, email)
+      .then(() => {
+        alert('Password reset email sent!');
+      })
+      .catch((error) => {
+        console.log(error.message);
+      });
   };
 
   if (!user) {
@@ -77,6 +92,12 @@ export default function Login() {
               placeholder='password'
               required
             ></TextInput>
+            <p
+              className='underline hover:text-blue-700 cursor-pointer text-right'
+              onClick={ressetPassword}
+            >
+              Forgot password?
+            </p>
             <ButtonOutline type='submit'>Submit</ButtonOutline>
           </form>
         </LargeContainer>
