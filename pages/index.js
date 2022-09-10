@@ -27,11 +27,13 @@ export default function Home() {
         'You are not approved. Please wait for an admin to go through your request and approve your profile. Thank you for your patience!'
       );
       logout();
+      location.reload();
       return;
       // Check if banned
     } else if ((await checkBanned(user)) === true) {
       alert('You are banned');
       logout();
+      location.reload();
       return;
     } else {
       const querySnapshot = await getDocs(collection(db, 'Debatts'));

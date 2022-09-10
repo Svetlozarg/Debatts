@@ -27,6 +27,8 @@ export default function Admin() {
   const [totalPosts, setTotalPosts] = useState([]);
   // Handle Total Users
   const [totalUsers, setTotalUsers] = useState([]);
+  // Handle Total Admins
+  const [totalAdminsUsers, setTotalAdminsUsers] = useState([]);
   // Handle Total Banned Users
   const [totalBannerUsers, setTotalBannerUsers] = useState([]);
   // Handle Banned Users
@@ -161,6 +163,7 @@ export default function Admin() {
 
         // Fetch Total Banner Users
         const bannedUsersArr = [];
+        const adminsArr = [];
         const unapprovedUsersArr = [];
         querySnapshot2.forEach((doc) => {
           if (doc.data().banned && doc.data().banned !== undefined) {
@@ -170,8 +173,11 @@ export default function Admin() {
             doc.data().approved !== undefined
           ) {
             unapprovedUsersArr.push(doc.data());
+          } else if (doc.data().role === 'admin') {
+            adminsArr.push(doc.data());
           }
         });
+        setTotalAdminsUsers(adminsArr);
         setTotalBannerUsers(bannedUsersArr);
         setBannedUsers(bannedUsersArr);
         setUnapprovedUsers(unapprovedUsersArr);
@@ -228,6 +234,10 @@ export default function Admin() {
                 <td>{totalUsers?.length}</td>
               </tr>
               <tr>
+                <td>Number of admins</td>
+                <td>{totalAdminsUsers?.length}</td>
+              </tr>
+              <tr>
                 <td>Number of banned users</td>
                 <td>{totalBannerUsers?.length}</td>
               </tr>
@@ -279,14 +289,14 @@ export default function Admin() {
                       className='p-0'
                       onClick={() => makeAdmin(userItem.displayName)}
                     >
-                      Admin
+                      Make Admin
                     </Button>
                   ) : (
                     <Button
                       className='p-0'
                       onClick={() => makeUser(userItem.displayName)}
                     >
-                      User
+                      Make User
                     </Button>
                   )}
 
@@ -310,6 +320,52 @@ export default function Admin() {
             );
           })}
         {searchedUser.length === 0 && <div>No user found</div>}
+      </CardContainer>
+      {/* Unapproved Users */}
+      <CardContainer wide hover={false}>
+        <h2>Unapproved Users</h2>
+        <table className='table-auto w-full flex flex-col justify-start items-center max-h-[250px] overflow-y-scroll shadow-inner [&>tbody>tr:nth-child(odd)]:bg-black/5'>
+          <tbody className='w-full'>
+            <tr className='flex flex-row justify-between items-center w-full p-0.5'>
+              <th>Number</th>
+              <th>Username</th>
+              <th>Approve</th>
+            </tr>
+
+            {unapprovedUsers.map((e, i) => {
+              return (
+                <tr
+                  key={i}
+                  className='flex flex-row justify-between items-center w-full p-0.5'
+                >
+                  <td>{i + 1}</td>
+                  <td>{e.displayName}</td>
+                  <td>
+                    <Button
+                      className='p-0'
+                      onClick={() => approve(e.displayName)}
+                    >
+                      Approve
+                    </Button>
+                  </td>
+                </tr>
+              );
+            })}
+
+            {unapprovedUsers.length === 0 && (
+              <tr className='flex flex-row justify-between items-center w-full p-0.5'>
+                <td></td>
+                <td>No users</td>
+                <td></td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </CardContainer>
+      {/* Find Posts */}
+      <CardContainer hover={false}>
+        <h2>Find Post</h2>
+        <p>TODO if necessary</p>
       </CardContainer>
       {/* Banned Users */}
       <CardContainer wide hover={false}>
@@ -352,23 +408,18 @@ export default function Admin() {
           </tbody>
         </table>
       </CardContainer>
-      {/* Find Posts */}
-      <CardContainer hover={false}>
-        <h2>Find Post</h2>
-        <p>TODO if necessary</p>
-      </CardContainer>
-      {/* Unapproved Users */}
+      {/* Admins */}
       <CardContainer wide hover={false}>
-        <h2>Unapproved Users</h2>
+        <h2>Admins</h2>
         <table className='table-auto w-full flex flex-col justify-start items-center max-h-[250px] overflow-y-scroll shadow-inner [&>tbody>tr:nth-child(odd)]:bg-black/5'>
           <tbody className='w-full'>
             <tr className='flex flex-row justify-between items-center w-full p-0.5'>
               <th>Number</th>
               <th>Username</th>
-              <th>Approve</th>
+              <th>Action</th>
             </tr>
 
-            {unapprovedUsers.map((e, i) => {
+            {totalAdminsUsers.map((e, i) => {
               return (
                 <tr
                   key={i}
@@ -379,16 +430,16 @@ export default function Admin() {
                   <td>
                     <Button
                       className='p-0'
-                      onClick={() => approve(e.displayName)}
+                      onClick={() => makeUser(e.displayName)}
                     >
-                      Approve
+                      Make User
                     </Button>
                   </td>
                 </tr>
               );
             })}
 
-            {unapprovedUsers.length === 0 && (
+            {totalAdminsUsers.length === 0 && (
               <tr className='flex flex-row justify-between items-center w-full p-0.5'>
                 <td></td>
                 <td>No users</td>

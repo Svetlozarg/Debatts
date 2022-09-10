@@ -28,6 +28,7 @@ export default function Account() {
   const { user, logout } = useAuth();
   const router = useRouter();
   const [userData, setUserData] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   // Fetch user data
   const handleUserData = async () => {
@@ -52,6 +53,10 @@ export default function Account() {
       } else {
         console.log('No such document!');
       }
+
+      setTimeout(() => {
+        setLoading(false);
+      }, 200);
     }
   };
 
@@ -204,63 +209,72 @@ export default function Account() {
       <Head>
         <title>Debatts · Admin Panel</title>
       </Head>
-      <LargeContainer className='col-span-full'>
-        <h2 className=''>{userData?.userName}</h2>
-        <div className='w-full border-b-2 text-gray-400 mt-2 text-center'>
-          Information
-        </div>
-        {/* User Information */}
-        <div className='my-1'>
-          {/* Username */}
-          <p>
-            <span className='font-semibold'>Username:</span>{' '}
-            {userData?.displayName}
-          </p>
-          {/* Full Name */}
-          <p>
-            <span className='font-semibold'>Full Name:</span>{' '}
-            {userData?.fullName}
-          </p>
-          {/* Email Address */}
-          <p>
-            <span className='font-semibold'>Email Address:</span>{' '}
-            {userData?.email}
-          </p>
-          {/* Created At */}
-          <p>
-            <span className='font-semibold'>Created at:</span>{' '}
-            {userData?.createdAt}
-          </p>
-          {/* Role */}
-          <p className='capitalize'>
-            <span className='font-semibold'>Role:</span> {userData?.role}
-          </p>
-          {/* Approved */}
-          <p className='capitalize'>
-            <span className='font-semibold'>Approved:</span>{' '}
-            {userData?.approved ? 'Yes' : 'No'}
-          </p>
-          {/* Banned */}
-          <p className='capitalize'>
-            <span className='font-semibold'>Banned:</span>{' '}
-            {userData?.banned ? 'Yes' : 'No'}
-          </p>
-        </div>
 
-        {/* Account Settings */}
-        <div className='w-full border-b-2 text-gray-400 mt-2 text-center'>
-          Account Settings
+      {loading && (
+        <div className='col-span-full'>
+          <div className='spinner'></div>
         </div>
-        {/* Account Button */}
-        <div className='my-1 flex flex-col align-center justify-center text-center'>
-          {/* Change Email */}
-          <a onClick={() => changeEmail()}>Change email</a>
-          {/* Change Password */}
-          <a onClick={() => changePassword()}>Change password</a>
-          {/* Delete Account */}
-          <a onClick={() => deleteAccount()}>Delete account</a>
-        </div>
-      </LargeContainer>
+      )}
+
+      {!loading && (
+        <LargeContainer className='col-span-full'>
+          <h2 className=''>{userData?.userName}</h2>
+          <div className='w-full border-b-2 text-gray-400 mt-2 text-center'>
+            Information
+          </div>
+          {/* User Information */}
+          <div className='my-1'>
+            {/* Username */}
+            <p>
+              <span className='font-semibold'>Username:</span>{' '}
+              {userData?.displayName}
+            </p>
+            {/* Full Name */}
+            <p>
+              <span className='font-semibold'>Full Name:</span>{' '}
+              {userData?.fullName}
+            </p>
+            {/* Email Address */}
+            <p>
+              <span className='font-semibold'>Email Address:</span>{' '}
+              {userData?.email}
+            </p>
+            {/* Created At */}
+            <p>
+              <span className='font-semibold'>Created at:</span>{' '}
+              {userData?.createdAt}
+            </p>
+            {/* Role */}
+            <p className='capitalize'>
+              <span className='font-semibold'>Role:</span> {userData?.role}
+            </p>
+            {/* Approved */}
+            <p className='capitalize'>
+              <span className='font-semibold'>Approved:</span>{' '}
+              {userData?.approved ? 'Yes' : 'No'}
+            </p>
+            {/* Banned */}
+            <p className='capitalize'>
+              <span className='font-semibold'>Banned:</span>{' '}
+              {userData?.banned ? 'Yes' : 'No'}
+            </p>
+          </div>
+
+          {/* Account Settings */}
+          <div className='w-full border-b-2 text-gray-400 mt-2 text-center'>
+            Account Settings
+          </div>
+          {/* Account Button */}
+          <div className='my-1 flex flex-col align-center justify-center text-center'>
+            {/* Change Email */}
+            <a onClick={() => changeEmail()}>Change email</a>
+            {/* Change Password */}
+            <a onClick={() => changePassword()}>Change password</a>
+            {/* Delete Account */}
+            <a onClick={() => deleteAccount()}>Delete account</a>
+          </div>
+        </LargeContainer>
+      )}
     </main>
   );
 }
