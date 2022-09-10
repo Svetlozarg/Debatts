@@ -8,6 +8,8 @@ import Card from '../components/containers/Card';
 import ButtonOutline from '../components/buttons/ButtonOutline';
 import Link from 'next/link';
 import ButtonActionRound from '../components/buttons/ButtonActionRound';
+import { checkApproved } from '../utils/checkApproved';
+import { checkBanned } from '../utils/checkBanned';
 
 export default function MyPosts() {
   const { user, logout } = useAuth();
@@ -20,29 +22,26 @@ export default function MyPosts() {
 
   // Fetch Posts
   const fetchPosts = async () => {
-    const docRef = doc(db, 'Users', user.displayName);
-    const docSnap = await getDoc(docRef);
-    setPosts(docSnap.data().debatts);
-
-    setTimeout(() => {
-      setLoading(false);
-    }, 200);
-  };
-
-  // Check if user is banned
-  const checkBannedUser = async () => {
-    if (user) {
-      const docRef = doc(db, 'Users', user?.displayName);
+    // Chech if Approved
+    if ((await checkApproved(user)) === false) {
+      alert(
+        'You are not approved. Please wait for an admin to go through your request and approve your profile. Thank you for your patience!'
+      );
+      logout();
+      return;
+      // Check if banned
+    } else if ((await checkBanned(user)) === true) {
+      alert('You are banned');
+      logout();
+      return;
+    } else if (user && user?.displayName !== undefined) {
+      const docRef = doc(db, 'Users', user.displayName);
       const docSnap = await getDoc(docRef);
+      setPosts(docSnap.data().debatts);
 
-      if (docSnap.exists()) {
-        if (docSnap.data().banned && docSnap.data().banned !== undefined) {
-          alert('You are banned');
-          logout();
-        }
-      } else {
-        console.log('No such document!');
-      }
+      setTimeout(() => {
+        setLoading(false);
+      }, 200);
     }
   };
 
@@ -56,7 +55,6 @@ export default function MyPosts() {
       router.push('/');
     }
 
-    checkBannedUser();
     fetchPosts();
   }, []);
 

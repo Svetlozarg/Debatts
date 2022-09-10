@@ -1,5 +1,5 @@
-import ButtonOutline from "../buttons/ButtonOutline";
-import Modal from "./Modal";
+import ButtonOutline from '../buttons/ButtonOutline';
+import Modal from './Modal';
 import {
   doc,
   deleteDoc,
@@ -7,9 +7,9 @@ import {
   getDocs,
   collection,
   arrayRemove,
-} from "firebase/firestore";
-import { db } from "../../config/firebase";
-import { useRouter } from "next/router";
+} from 'firebase/firestore';
+import { db } from '../../config/firebase';
+import { useRouter } from 'next/router';
 
 export default function ModalAdmin({
   isOpen,
@@ -25,11 +25,11 @@ export default function ModalAdmin({
   const banUser = async (id) => {
     if (id) {
       // Ban User
-      const querySnapshot = await getDocs(collection(db, "Users"));
+      const querySnapshot = await getDocs(collection(db, 'Users'));
       querySnapshot.forEach(async (user) => {
         if (user.data().displayName === id) {
           user.data().debatts.map(async (debatt, i) => {
-            await updateDoc(doc(db, "Users", id), {
+            await updateDoc(doc(db, 'Users', id), {
               banned: true,
               debatts: arrayRemove(user.data().debatts[i]),
             });
@@ -37,16 +37,16 @@ export default function ModalAdmin({
         }
       });
 
-      const querySnapshot2 = await getDocs(collection(db, "Debatts"));
+      const querySnapshot2 = await getDocs(collection(db, 'Debatts'));
       querySnapshot2.forEach(async (docID) => {
         // // Delete banned user's posts
         if (docID.data().author === id) {
-          await deleteDoc(doc(db, "Debatts", docID.data().title));
+          await deleteDoc(doc(db, 'Debatts', docID.data().title));
         }
         // Delete Agree Comments
         docID.data().agree.map(async (comment, i) => {
           if (comment.author === id) {
-            await updateDoc(doc(db, "Debatts", docID.data().title), {
+            await updateDoc(doc(db, 'Debatts', docID.data().title), {
               agree: arrayRemove(docID.data().agree[i]),
             });
           }
@@ -54,17 +54,17 @@ export default function ModalAdmin({
         // Delete Disagree Comments
         docID.data().disagree.map(async (comment, i) => {
           if (comment.author === id) {
-            await updateDoc(doc(db, "Debatts", docID.data().title), {
+            await updateDoc(doc(db, 'Debatts', docID.data().title), {
               disagree: arrayRemove(docID.data().disagree[i]),
             });
           }
         });
       });
 
-      if (window.location.pathname === "/") {
+      if (window.location.pathname === '/') {
         location.reload();
       } else {
-        router.push("/");
+        router.push('/');
       }
     }
   };
@@ -73,12 +73,12 @@ export default function ModalAdmin({
   const deletePost = async (id) => {
     if (id) {
       // Remove post from user debatt's array
-      const querySnapshot = await getDocs(collection(db, "Users"));
+      const querySnapshot = await getDocs(collection(db, 'Users'));
       querySnapshot.forEach(async (user) => {
         if (user.data().displayName === userID) {
           user.data().debatts.map(async (debatt, i) => {
             if (debatt.title === id) {
-              await updateDoc(doc(db, "Users", userID), {
+              await updateDoc(doc(db, 'Users', userID), {
                 debatts: arrayRemove(user.data().debatts[i]),
               });
             }
@@ -87,12 +87,12 @@ export default function ModalAdmin({
       });
 
       // Remove Post
-      await deleteDoc(doc(db, "Debatts", id));
+      await deleteDoc(doc(db, 'Debatts', id));
 
-      if (window.location.pathname === "/") {
+      if (window.location.pathname === '/') {
         location.reload();
       } else {
-        router.push("/");
+        router.push('/');
       }
     }
   };
@@ -100,25 +100,25 @@ export default function ModalAdmin({
   // Delete Comment Function
   const deleteComment = async (id) => {
     if (id) {
-      const querySnapshot = await getDocs(collection(db, "Debatts"));
+      const querySnapshot = await getDocs(collection(db, 'Debatts'));
       querySnapshot.forEach(async (docID) => {
         if (docID.data().title === postID) {
-          if (type === "agree") {
+          if (type === 'agree') {
             docID.data().agree.map(async (comment, i) => {
               if (comment.author === userID) {
                 if (comment.comment === commentID) {
-                  await updateDoc(doc(db, "Debatts", postID), {
+                  await updateDoc(doc(db, 'Debatts', postID), {
                     agree: arrayRemove(docID.data().agree[i]),
                   });
                   location.reload();
                 }
               }
             });
-          } else if (type === "disagree") {
+          } else if (type === 'disagree') {
             docID.data().disagree.map(async (comment, i) => {
               if (comment.author === userID) {
                 if (comment.comment === commentID) {
-                  await updateDoc(doc(db, "Debatts", postID), {
+                  await updateDoc(doc(db, 'Debatts', postID), {
                     disagree: arrayRemove(docID.data().disagree[i]),
                   });
                   location.reload();
@@ -134,7 +134,7 @@ export default function ModalAdmin({
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <h2>Admin Controls</h2>
-      <div className="flex flex-col gap-2">
+      <div className='flex flex-col gap-2'>
         {userID && (
           <ButtonOutline onClick={() => banUser(userID)}>
             Ban user

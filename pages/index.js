@@ -6,6 +6,8 @@ import { useRouter } from 'next/router';
 import { collection, getDocs, doc, getDoc } from 'firebase/firestore';
 import { db } from '../config/firebase';
 import loadCustomRoutes from 'next/dist/lib/load-custom-routes';
+import { checkApproved } from '../utils/checkApproved';
+import { checkBanned } from '../utils/checkBanned';
 
 export default function Home() {
   // User obj
@@ -19,38 +21,35 @@ export default function Home() {
 
   // Fetch Debatts
   const fetchDebatts = async () => {
-    const querySnapshot = await getDocs(collection(db, 'Debatts'));
-    const debattsArr = [];
-    querySnapshot.forEach((doc) => {
-      debattsArr.push(doc.data());
-    });
-    debattsArr.sort((a, b) => {
-      var dateA = new Date(a.createdAt);
-      var dateB = new Date(b.createdAt);
+    // Chech if Approved
+    if ((await checkApproved(user)) === false) {
+      alert(
+        'You are not approved. Please wait for an admin to go through your request and approve your profile. Thank you for your patience!'
+      );
+      logout();
+      return;
+      // Check if banned
+    } else if ((await checkBanned(user)) === true) {
+      alert('You are banned');
+      logout();
+      return;
+    } else {
+      const querySnapshot = await getDocs(collection(db, 'Debatts'));
+      const debattsArr = [];
+      querySnapshot.forEach((doc) => {
+        debattsArr.push(doc.data());
+      });
+      debattsArr.sort((a, b) => {
+        var dateA = new Date(a.createdAt);
+        var dateB = new Date(b.createdAt);
 
-      return dateA < dateB ? 1 : -1;
-    });
-    setDebatts(debattsArr);
+        return dateA < dateB ? 1 : -1;
+      });
+      setDebatts(debattsArr);
 
-    setTimeout(() => {
-      setLoading(false);
-    }, 200);
-  };
-
-  // Check if user is banned
-  const checkBannedUser = async () => {
-    if (user) {
-      const docRef = doc(db, 'Users', user?.displayName);
-      const docSnap = await getDoc(docRef);
-
-      if (docSnap.exists()) {
-        if (docSnap.data().banned && docSnap.data().banned !== undefined) {
-          alert('You are banned');
-          logout();
-        }
-      } else {
-        console.log('No such document!');
-      }
+      setTimeout(() => {
+        setLoading(false);
+      }, 200);
     }
   };
 
@@ -60,7 +59,6 @@ export default function Home() {
   };
 
   useEffect(() => {
-    checkBannedUser();
     fetchDebatts();
   }, []);
 

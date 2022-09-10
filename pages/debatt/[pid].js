@@ -18,6 +18,9 @@ import Head from 'next/head';
 import ModalError from '../../components/modals/ModalError';
 import ButtonActionRound from '../../components/buttons/ButtonActionRound';
 import ModalAdmin from '../../components/modals/ModalAdmin';
+import { checkApproved } from '../../utils/checkApproved';
+import { checkBanned } from '../../utils/checkBanned';
+import { checkAdmin } from '../../utils/checkAdmin';
 
 export default function Debatt({}) {
   const router = useRouter();
@@ -48,122 +51,111 @@ export default function Debatt({}) {
 
   // Handle follow button clicked
   async function followDebatt(e) {
-    e.stopPropagation();
+    if (user && user?.displayName !== undefined) {
+      e.stopPropagation();
 
-    setIsFollowing(!isFollowing);
+      setIsFollowing(!isFollowing);
 
-    const debattDoc = doc(db, 'Users', user?.displayName);
-    if (!isFollowing) {
-      await updateDoc(debattDoc, {
-        debatts: arrayUnion({
-          author: info?.author,
-          title: info?.title,
-        }),
-      });
-    } else if (isFollowing) {
-      await updateDoc(debattDoc, {
-        debatts: arrayRemove({
-          author: info?.author,
-          title: info?.title,
-        }),
-      });
+      const debattDoc = doc(db, 'Users', user?.displayName);
+      if (!isFollowing) {
+        await updateDoc(debattDoc, {
+          debatts: arrayUnion({
+            author: info?.author,
+            title: info?.title,
+          }),
+        });
+      } else if (isFollowing) {
+        await updateDoc(debattDoc, {
+          debatts: arrayRemove({
+            author: info?.author,
+            title: info?.title,
+          }),
+        });
+      }
     }
   }
 
   // Fetch post data
   const handlePostData = async () => {
-    const docRef = doc(db, 'Debatts', pid);
-    const docSnap = await getDoc(docRef);
-
-    if (docSnap.exists()) {
-      setInfo(docSnap.data());
+    // Chech if Approved
+    if ((await checkApproved(user)) === false) {
+      alert(
+        'You are not approved. Please wait for an admin to go through your request and approve your profile. Thank you for your patience!'
+      );
+      logout();
+      return;
+      // Check if banned
+    } else if ((await checkBanned(user)) === true) {
+      alert('You are banned');
+      logout();
+      return;
     } else {
-      console.log('No such document!');
-    }
+      setIsAdmin(await checkAdmin(user));
 
-    if (user) {
-      const docRef2 = doc(db, 'Users', user.displayName);
-      const docSnap2 = await getDoc(docRef2);
-
-      if (docSnap2.exists()) {
-        docSnap2.data().debatts.map((debat) => {
-          if (debat.title === pid) {
-            setIsFollowing(true);
-            return;
-          }
-        });
-      }
-    }
-  };
-
-  // Check if user's role is admin
-  const checkAdmin = async () => {
-    if (!user) return;
-    const docRef = doc(db, 'Users', user.displayName);
-    const docSnap = await getDoc(docRef);
-
-    // Check if current user's role is admin
-    if (docSnap.exists()) {
-      if (docSnap.data().role === 'admin') {
-        setIsAdmin(true);
-      }
-    }
-  };
-
-  // Chech if user is banned
-  const checkBannedUser = async () => {
-    if (user) {
-      const docRef = doc(db, 'Users', user?.displayName);
+      const docRef = doc(db, 'Debatts', pid);
       const docSnap = await getDoc(docRef);
 
       if (docSnap.exists()) {
-        if (docSnap.data().banned && docSnap.data().banned !== undefined) {
-          alert('You are banned');
-          logout();
-        }
+        setInfo(docSnap.data());
       } else {
         console.log('No such document!');
+      }
+
+      if (user && user?.displayName !== undefined) {
+        const docRef2 = doc(db, 'Users', user?.displayName);
+        const docSnap2 = await getDoc(docRef2);
+
+        if (docSnap2.exists()) {
+          docSnap2.data().debatts.map((debat) => {
+            if (debat?.title === pid) {
+              setIsFollowing(true);
+              return;
+            }
+          });
+        }
       }
     }
   };
 
   // Handle post comment
   const handlePostComment = async () => {
-    if (!(isAgreeing || isDisagreeing)) {
-      setErrorToShow('You have not decided if you disagree or not!');
-      setIsErrorShowing(true);
+    if (user && user?.displayName !== undefined) {
+      if (!(isAgreeing || isDisagreeing)) {
+        setErrorToShow('You have not decided if you disagree or not!');
+        setIsErrorShowing(true);
 
-      return;
-    }
-    if (!comment) {
-      setErrorToShow('You have not commented!');
-      setIsErrorShowing(true);
-      return;
-    }
-
-    try {
-      const debattDoc = doc(db, 'Debatts', info.title);
-
-      if (isAgreeing) {
-        await updateDoc(debattDoc, {
-          agree: arrayUnion({
-            author: user.displayName,
-            comment: comment,
-          }),
-        });
-      } else if (isDisagreeing) {
-        await updateDoc(debattDoc, {
-          disagree: arrayUnion({
-            author: user.displayName,
-            comment: comment,
-          }),
-        });
+        return;
       }
-      handlePostData();
-      setIsCommentMode(false);
-    } catch (e) {
-      setErrorToShow(e);
-      setIsErrorShowing(true);
+      if (!comment) {
+        setErrorToShow('You have not commented!');
+        setIsErrorShowing(true);
+        return;
+      }
+
+      try {
+        const debattDoc = doc(db, 'Debatts', info?.title);
+
+        if (isAgreeing) {
+          await updateDoc(debattDoc, {
+            agree: arrayUnion({
+              author: user?.displayName,
+              comment: comment,
+            }),
+          });
+        } else if (isDisagreeing) {
+          await updateDoc(debattDoc, {
+            disagree: arrayUnion({
+              author: user?.displayName,
+              comment: comment,
+            }),
+          });
+        }
+        handlePostData();
+        setIsCommentMode(false);
+      } catch (e) {
+        setErrorToShow(e);
+        setIsErrorShowing(true);
+      }
     }
   };
 
@@ -177,8 +169,6 @@ export default function Debatt({}) {
 
   useEffect(() => {
     handlePostData();
-    checkAdmin();
-    checkBannedUser();
   }, []);
 
   return (

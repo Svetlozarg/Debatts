@@ -20,8 +20,9 @@ import {
   EmailAuthProvider,
   reauthenticateWithCredential,
 } from 'firebase/auth';
-
 import LargeContainer from '../components/containers/LargeContainer';
+import { checkApproved } from '../utils/checkApproved';
+import { checkBanned } from '../utils/checkBanned';
 
 export default function Account() {
   const { user, logout } = useAuth();
@@ -30,8 +31,20 @@ export default function Account() {
 
   // Fetch user data
   const handleUserData = async () => {
-    if (user) {
-      const docRef = doc(db, 'Users', user.displayName);
+    // Chech if Approved
+    if ((await checkApproved(user)) === false) {
+      alert(
+        'You are not approved. Please wait for an admin to go through your request and approve your profile. Thank you for your patience!'
+      );
+      logout();
+      return;
+      // Check if banned
+    } else if ((await checkBanned(user)) === true) {
+      alert('You are banned');
+      logout();
+      return;
+    } else if (user && user?.displayName !== undefined) {
+      const docRef = doc(db, 'Users', user?.displayName);
       const docSnap = await getDoc(docRef);
 
       if (docSnap.exists()) {
@@ -42,148 +55,139 @@ export default function Account() {
     }
   };
 
-  // Check if user is banned
-  const checkBannedUser = async () => {
-    if (user) {
+  // Handle delete account
+  const deleteAccount = async () => {
+    if (user && user?.displayName !== undefined) {
+      // ReAuth!
       const docRef = doc(db, 'Users', user?.displayName);
       const docSnap = await getDoc(docRef);
 
       if (docSnap.exists()) {
-        if (docSnap.data().banned && docSnap.data().banned !== undefined) {
-          alert('You are banned');
-          logout();
-        }
-      } else {
-        console.log('No such document!');
-      }
-    }
-  };
-
-  // Handle delete account
-  const deleteAccount = async () => {
-    // ReAuth!
-    const docRef = doc(db, 'Users', user?.displayName);
-    const docSnap = await getDoc(docRef);
-
-    if (docSnap.exists()) {
-      // Delete user
-      await deleteDoc(doc(db, 'Users', user?.displayName));
-    }
-
-    const querySnapshot = await getDocs(collection(db, 'Debatts'));
-    querySnapshot.forEach(async (getDoc) => {
-      // Delete posts
-      if (getDoc.data().author === user?.displayName) {
-        await deleteDoc(doc(db, 'Debatts', getDoc.data().title));
+        // Delete user
+        await deleteDoc(doc(db, 'Users', user?.displayName));
       }
 
-      // Delete Agree Comments
-      getDoc.data().agree.map(async (comment, i) => {
-        if (comment.author === user?.displayName) {
-          await updateDoc(doc(db, 'Debatts', getDoc.data().title), {
-            agree: arrayRemove(getDoc.data().agree[i]),
-          });
+      const querySnapshot = await getDocs(collection(db, 'Debatts'));
+      querySnapshot.forEach(async (getDoc) => {
+        // Delete posts
+        if (getDoc.data().author === user?.displayName) {
+          await deleteDoc(doc(db, 'Debatts', getDoc.data().title));
         }
+
+        // Delete Agree Comments
+        getDoc.data().agree.map(async (comment, i) => {
+          if (comment.author === user?.displayName) {
+            await updateDoc(doc(db, 'Debatts', getDoc.data().title), {
+              agree: arrayRemove(getDoc.data().agree[i]),
+            });
+          }
+        });
+
+        // Delete Disagree Comments
+        getDoc.data().disagree.map(async (comment, i) => {
+          if (comment.author === user?.displayName) {
+            await updateDoc(doc(db, 'Debatts', getDoc.data().title), {
+              disagree: arrayRemove(getDoc.data().disagree[i]),
+            });
+          }
+        });
       });
 
-      // Delete Disagree Comments
-      getDoc.data().disagree.map(async (comment, i) => {
-        if (comment.author === user?.displayName) {
-          await updateDoc(doc(db, 'Debatts', getDoc.data().title), {
-            disagree: arrayRemove(getDoc.data().disagree[i]),
-          });
-        }
+      let auth = getAuth();
+      let currUser = auth.currentUser;
+
+      // Delete user's obj
+      deleteUser(currUser).catch((error) => {
+        console.log(error.message);
       });
-    });
 
-    let auth = getAuth();
-    let currUser = auth.currentUser;
-
-    // Delete user's obj
-    deleteUser(currUser).catch((error) => {
-      console.log(error.message);
-    });
-
-    router.push('/login');
+      router.push('/login');
+    }
   };
 
   // Handle Change Email
   const changeEmail = async () => {
-    const auth = getAuth();
-    const user = auth.currentUser;
+    if (user && user?.displayName !== undefined) {
+      const auth = getAuth();
+      const user = auth.currentUser;
 
-    const { email } = user;
+      const { email } = user;
 
-    // Prompt for current password
-    const password = prompt('Type your current password');
+      // Prompt for current password
+      const password = prompt('Type your current password');
 
-    const credentials = EmailAuthProvider.credential(email, password);
+      const credentials = EmailAuthProvider.credential(email, password);
 
-    // Prompt for new email
-    const newEmail = prompt('Type your new email');
-    // Prompt for repeat new email
-    const repeatNewEmail = prompt('Repeat your new email');
+      // Prompt for new email
+      const newEmail = prompt('Type your new email');
+      // Prompt for repeat new email
+      const repeatNewEmail = prompt('Repeat your new email');
 
-    // Check if emails match
-    if (newEmail === repeatNewEmail) {
-      // Reauth user with email and password
-      await reauthenticateWithCredential(user, credentials)
-        .then(async () => {
-          // Update new email
-          await updateEmail(auth.currentUser, newEmail).catch((error) => {
+      // Check if emails match
+      if (newEmail === repeatNewEmail) {
+        // Reauth user with email and password
+        await reauthenticateWithCredential(user, credentials)
+          .then(async () => {
+            // Update new email
+            await updateEmail(auth.currentUser, newEmail).catch((error) => {
+              console.log(error.message);
+            });
+
+            await updateDoc(doc(db, 'Users', user?.displayName), {
+              email: newEmail,
+            });
+
+            location.reload();
+          })
+          .catch((error) => {
             console.log(error.message);
           });
-
-          await updateDoc(doc(db, 'Users', user?.displayName), {
-            email: newEmail,
-          });
-
-          location.reload();
-        })
-        .catch((error) => {
-          console.log(error.message);
-        });
-    } else {
-      alert('Emails do not match');
+      } else {
+        alert('Emails do not match');
+      }
     }
   };
 
   // Handle Change Password
   const changePassword = async () => {
-    const auth = getAuth();
-    const user = auth.currentUser;
+    if (user && user?.displayName !== undefined) {
+      const auth = getAuth();
+      const user = auth.currentUser;
 
-    const { email } = user;
+      const { email } = user;
 
-    // Prompt for current password
-    const password = prompt('Type your current password');
+      // Prompt for current password
+      const password = prompt('Type your current password');
 
-    const credentials = EmailAuthProvider.credential(email, password);
+      const credentials = EmailAuthProvider.credential(email, password);
 
-    // Prompt for new password
-    const newPassword = prompt('Type your new password');
-    // Prompt for repeat new password
-    const repeatNewPassword = prompt('Repeat your new password');
+      // Prompt for new password
+      const newPassword = prompt('Type your new password');
+      // Prompt for repeat new password
+      const repeatNewPassword = prompt('Repeat your new password');
 
-    // Check if password match
-    if (newPassword === repeatNewPassword) {
-      // Reauth user with password and password
-      await reauthenticateWithCredential(user, credentials)
-        .then(async () => {
-          // Update new password
-          await updatePassword(auth.currentUser, newPassword).catch((error) => {
+      // Check if password match
+      if (newPassword === repeatNewPassword) {
+        // Reauth user with password and password
+        await reauthenticateWithCredential(user, credentials)
+          .then(async () => {
+            // Update new password
+            await updatePassword(auth.currentUser, newPassword).catch(
+              (error) => {
+                console.log(error.message);
+              }
+            );
+
+            logout();
+
+            location.reload();
+          })
+          .catch((error) => {
             console.log(error.message);
           });
-
-          logout();
-
-          location.reload();
-        })
-        .catch((error) => {
-          console.log(error.message);
-        });
-    } else {
-      alert('Emails do not match');
+      } else {
+        alert('Emails do not match');
+      }
     }
   };
 
@@ -191,7 +195,6 @@ export default function Account() {
     if (!user) {
       router.push('/login');
     } else {
-      checkBannedUser();
       handleUserData();
     }
   }, []);
@@ -231,6 +234,16 @@ export default function Account() {
           {/* Role */}
           <p className='capitalize'>
             <span className='font-semibold'>Role:</span> {userData?.role}
+          </p>
+          {/* Approved */}
+          <p className='capitalize'>
+            <span className='font-semibold'>Approved:</span>{' '}
+            {userData?.approved ? 'Yes' : 'No'}
+          </p>
+          {/* Banned */}
+          <p className='capitalize'>
+            <span className='font-semibold'>Banned:</span>{' '}
+            {userData?.banned ? 'Yes' : 'No'}
           </p>
         </div>
 

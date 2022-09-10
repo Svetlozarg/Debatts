@@ -12,14 +12,15 @@ export default function CardSmall({ title, body, post, onClick, type }) {
 
   // Check if user's role is admin
   const checkAdmin = async () => {
-    if (!user) return;
-    const docRef = doc(db, 'Users', user.displayName);
-    const docSnap = await getDoc(docRef);
+    if (user && user?.displayName !== undefined) {
+      const docRef = doc(db, 'Users', user?.displayName);
+      const docSnap = await getDoc(docRef);
 
-    // Check if current user's role is admin
-    if (docSnap.exists()) {
-      if (docSnap.data().role === 'admin') {
-        setIsAdmin(true);
+      // Check if current user's role is admin
+      if (docSnap.exists()) {
+        if (docSnap.data().role === 'admin') {
+          setIsAdmin(true);
+        }
       }
     }
   };

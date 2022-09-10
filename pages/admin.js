@@ -32,6 +32,8 @@ export default function Admin() {
   // Handle Banned Users
   const [bannedUsers, setBannedUsers] = useState([]);
   const searchUser = useRef('');
+  // Handle Approved Users
+  const [unapprovedUsers, setUnapprovedUsers] = useState([]);
 
   const [searchedUser, setSearchedUser] = useState([]);
 
@@ -83,6 +85,21 @@ export default function Admin() {
       // Unban user
       await updateDoc(doc(db, 'Users', username), {
         banned: false,
+      });
+    }
+
+    location.reload();
+  };
+
+  // Approve User
+  const approve = async (username) => {
+    const docRef = doc(db, 'Users', username);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      // Unban user
+      await updateDoc(doc(db, 'Users', username), {
+        approved: true,
       });
     }
 
@@ -142,15 +159,22 @@ export default function Admin() {
         });
         setTotalUsers(usersArr);
 
-        // Fetch Total Banner Users TODO
+        // Fetch Total Banner Users
         const bannedUsersArr = [];
+        const unapprovedUsersArr = [];
         querySnapshot2.forEach((doc) => {
           if (doc.data().banned && doc.data().banned !== undefined) {
             bannedUsersArr.push(doc.data());
+          } else if (
+            !doc.data().approved &&
+            doc.data().approved !== undefined
+          ) {
+            unapprovedUsersArr.push(doc.data());
           }
         });
         setTotalBannerUsers(bannedUsersArr);
         setBannedUsers(bannedUsersArr);
+        setUnapprovedUsers(unapprovedUsersArr);
       }
     }
   };
@@ -317,6 +341,14 @@ export default function Admin() {
                 </tr>
               );
             })}
+
+            {bannedUsers.length === 0 && (
+              <tr className='flex flex-row justify-between items-center w-full p-0.5'>
+                <td></td>
+                <td>No users</td>
+                <td></td>
+              </tr>
+            )}
           </tbody>
         </table>
       </CardContainer>
@@ -324,6 +356,47 @@ export default function Admin() {
       <CardContainer hover={false}>
         <h2>Find Post</h2>
         <p>TODO if necessary</p>
+      </CardContainer>
+      {/* Unapproved Users */}
+      <CardContainer wide hover={false}>
+        <h2>Unapproved Users</h2>
+        <table className='table-auto w-full flex flex-col justify-start items-center max-h-[250px] overflow-y-scroll shadow-inner [&>tbody>tr:nth-child(odd)]:bg-black/5'>
+          <tbody className='w-full'>
+            <tr className='flex flex-row justify-between items-center w-full p-0.5'>
+              <th>Number</th>
+              <th>Username</th>
+              <th>Approve</th>
+            </tr>
+
+            {unapprovedUsers.map((e, i) => {
+              return (
+                <tr
+                  key={i}
+                  className='flex flex-row justify-between items-center w-full p-0.5'
+                >
+                  <td>{i + 1}</td>
+                  <td>{e.displayName}</td>
+                  <td>
+                    <Button
+                      className='p-0'
+                      onClick={() => approve(e.displayName)}
+                    >
+                      Approve
+                    </Button>
+                  </td>
+                </tr>
+              );
+            })}
+
+            {unapprovedUsers.length === 0 && (
+              <tr className='flex flex-row justify-between items-center w-full p-0.5'>
+                <td></td>
+                <td>No users</td>
+                <td></td>
+              </tr>
+            )}
+          </tbody>
+        </table>
       </CardContainer>
     </main>
   );

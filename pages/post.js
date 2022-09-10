@@ -10,6 +10,8 @@ import { useRouter } from 'next/router';
 import Head from 'next/head';
 import Modal from '../components/modals/Modal';
 import ModalStandard from '../components/modals/ModalStandard';
+import { checkApproved } from '../utils/checkApproved';
+import { checkBanned } from '../utils/checkBanned';
 
 export default function Post() {
   // Router
@@ -30,19 +32,19 @@ export default function Post() {
   const isSidebarVisible = useOnScreen(sidebarRulesRef);
 
   // Check if user is banned
-  const checkBannedUser = async () => {
-    if (user) {
-      const docRef = doc(db, 'Users', user?.displayName);
-      const docSnap = await getDoc(docRef);
-
-      if (docSnap.exists()) {
-        if (docSnap.data().banned && docSnap.data().banned !== undefined) {
-          alert('You are banned');
-          logout();
-        }
-      } else {
-        console.log('No such document!');
-      }
+  const checkUser = async () => {
+    // Chech if Approved
+    if ((await checkApproved(user)) === false) {
+      alert(
+        'You are not approved. Please wait for an admin to go through your request and approve your profile. Thank you for your patience!'
+      );
+      logout();
+      return;
+      // Check if banned
+    } else if ((await checkBanned(user)) === true) {
+      alert('You are banned');
+      logout();
+      return;
     }
   };
 
@@ -51,7 +53,7 @@ export default function Post() {
   }, [isSidebarVisible]);
 
   useEffect(() => {
-    checkBannedUser();
+    checkUser();
   }, []);
 
   // Confirm Post Popup
@@ -63,44 +65,46 @@ export default function Post() {
 
   // Handle post submit
   async function submitPost() {
-    setConfirmModalOpen(false);
+    if (user && user.displayName !== undefined) {
+      setConfirmModalOpen(false);
 
-    // Here can be performed title, body text limit
+      // Here can be performed title, body text limit
 
-    try {
-      var today = new Date();
-      var dd = String(today.getDate()).padStart(2, '0');
-      var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-      var yyyy = today.getFullYear();
-      var hour = (today.getHours() < 10 ? '0' : '') + today.getHours();
-      var minutes = (today.getMinutes() < 10 ? '0' : '') + today.getMinutes();
-      var seconds = (today.getSeconds() < 10 ? '0' : '') + today.getSeconds();
-      var time = hour + ':' + minutes + ':' + seconds;
+      try {
+        var today = new Date();
+        var dd = String(today.getDate()).padStart(2, '0');
+        var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+        var yyyy = today.getFullYear();
+        var hour = (today.getHours() < 10 ? '0' : '') + today.getHours();
+        var minutes = (today.getMinutes() < 10 ? '0' : '') + today.getMinutes();
+        var seconds = (today.getSeconds() < 10 ? '0' : '') + today.getSeconds();
+        var time = hour + ':' + minutes + ':' + seconds;
 
-      // Create Post
-      await setDoc(doc(db, 'Debatts', title), {
-        title: title,
-        body: body,
-        author: user?.displayName,
-        agree: [],
-        disagree: [],
-        createdAt: (today = mm + '/' + dd + '/' + yyyy + ' ' + time),
-      });
-
-      // Update user debatt's array
-      const debattDoc = doc(db, 'Users', user?.displayName);
-
-      await updateDoc(debattDoc, {
-        debatts: arrayUnion({
-          author: user?.displayName,
+        // Create Post
+        await setDoc(doc(db, 'Debatts', title), {
           title: title,
           body: body,
-        }),
-      });
+          author: user?.displayName,
+          agree: [],
+          disagree: [],
+          createdAt: (today = mm + '/' + dd + '/' + yyyy + ' ' + time),
+        }).then(async () => {
+          // Update user debatt's array
+          const debattDoc = doc(db, 'Users', user?.displayName);
 
-      router.push('/');
-    } catch (e) {
-      // setErrorToShow(`${e.name}: ${e.message}`);
+          await updateDoc(debattDoc, {
+            debatts: arrayUnion({
+              author: user?.displayName,
+              title: title,
+              body: body,
+            }),
+          }).then(() => {
+            router.push('/');
+          });
+        });
+      } catch (e) {
+        // setErrorToShow(`${e.name}: ${e.message}`);
+      }
     }
   }
 
