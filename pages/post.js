@@ -140,7 +140,7 @@ export default function Post() {
                 {/* Title */}
                 <TextInputContainerless
                   required
-                  placeholder='Title...'
+                  placeholder='Add Short title...'
                   className='text-xl text-center overflow-hidden underline decoration-black'
                   containerClassName='pb-2 mb-2 overflow-none'
                   onChange={(e) => {
@@ -150,7 +150,7 @@ export default function Post() {
                       e.currentTarget.scrollHeight + 'px';
                     setTitle(e.target.value);
                   }}
-                  characterLimit={100}
+                  characterLimit={50}
                 />
                 <div className='absolute h-1.5 w-[30%] bg-secondary -left-4 bottom-0'></div>
               </div>
@@ -188,7 +188,7 @@ export default function Post() {
         </main>
         <div
           className='relative hidden flex-grow lg:flex'
-          ref={user ? sidebarRulesRef : ''}
+          ref={sidebarRulesRef}
         >
           {/* Rules section */}
           <div className='w-full absolute left-0 top-[4.5rem] right-0 p-2'>
