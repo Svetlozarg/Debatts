@@ -10,7 +10,8 @@ import TextInput from '../components/inputs/TextInput';
 import Checkbox from '../components/inputs/Checkbox';
 import Head from 'next/head';
 import ModalError from '../components/modals/ModalError';
-import { getAuth, updateProfile } from 'firebase/auth';
+import { updateProfile } from 'firebase/auth';
+import { auth } from '../config/firebase';
 
 export default function Register() {
   const router = useRouter();
@@ -85,52 +86,92 @@ export default function Register() {
       return;
     }
 
-    // Try register with email and password
-    // Else error
-    try {
-      if (data?.password === data?.rpassword) {
-        var today = new Date();
-        var dd = String(today.getDate()).padStart(2, '0');
-        var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-        var yyyy = today.getFullYear();
+    // Try register user with email and password
+    if (data?.password === data?.rpassword) {
+      try {
+        await register(data?.email, data?.password).then(
+          async (userCredential) => {
+            const userData = userCredential.user;
 
-        if (data?.userName !== undefined && data?.userName !== '') {
-          await setDoc(doc(db, 'Users', data?.userName), {
-            fullName: data?.fullName,
-            displayName: data?.userName,
-            email: data?.email,
-            role: 'user',
-            debatts: [],
-            approved: false,
-            banned: false,
-            createdAt: (today = mm + '/' + dd + '/' + yyyy),
-          })
-            .then(async () => {
-              await register(data?.email, data?.password);
+            console.log(userData);
 
-              const auth = getAuth();
-
-              updateProfile(auth?.currentUser, {
-                displayName: data?.userName,
-              });
-            })
-            .then(() => {
-              location.reload();
-
-              setTimeout(() => {
-                router.push('/');
-              }, 1000);
+            updateProfile(auth?.currentUser, {
+              displayName: data?.userName,
             });
-        }
-      } else {
-        setErrorToShow('Passwords do not match!');
-        setIsErrorShowing(true);
-        return;
+
+            var today = new Date();
+            var dd = String(today.getDate()).padStart(2, '0');
+            var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+            var yyyy = today.getFullYear();
+
+            await setDoc(doc(db, 'Users', data?.userName), {
+              fullName: data?.fullName,
+              displayName: data?.userName,
+              email: data?.userName,
+              role: 'user',
+              debatts: [],
+              approved: false,
+              banned: false,
+              createdAt: (today = mm + '/' + dd + '/' + yyyy),
+            });
+
+            setTimeout(() => {
+              location.reload();
+              router.push('/');
+            }, 1000);
+          }
+        );
+      } catch (error) {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.log(errorCode + ' / ' + errorMessage);
       }
-    } catch (e) {
-      setErrorToShow(e);
-      setIsErrorShowing(true);
     }
+
+    // try {
+    //   if (data?.password === data?.rpassword) {
+    //     var today = new Date();
+    //     var dd = String(today.getDate()).padStart(2, '0');
+    //     var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    //     var yyyy = today.getFullYear();
+
+    //     if (data?.userName !== undefined && data?.userName !== '') {
+    //       // Create User DB Doc
+    //       await setDoc(doc(db, 'Users', data?.userName), {
+    //         fullName: data?.fullName,
+    //         displayName: data?.userName,
+    //         email: data?.email,
+    //         role: 'user',
+    //         debatts: [],
+    //         approved: false,
+    //         banned: false,
+    //         createdAt: (today = mm + '/' + dd + '/' + yyyy),
+    //       });
+
+    //       // Register user
+    //       await register(data?.email, data?.password);
+
+    //       const auth = getAuth();
+
+    //       updateProfile(auth?.currentUser, {
+    //         displayName: data?.userName,
+    //       });
+
+    //       location.reload();
+
+    //       setTimeout(() => {
+    //         router.push('/');
+    //       }, 1000);
+    //     }
+    //   } else {
+    //     setErrorToShow('Passwords do not match!');
+    //     setIsErrorShowing(true);
+    //     return;
+    //   }
+    // } catch (e) {
+    //   setErrorToShow(e);
+    //   setIsErrorShowing(true);
+    // }
   };
 
   if (!user) {
