@@ -71,6 +71,7 @@ export default function Debatt({ id }) {
           debatts: arrayUnion({
             author: info?.author,
             title: info?.title,
+            body: info?.body,
           }),
         });
       } else if (isFollowing) {
@@ -78,6 +79,7 @@ export default function Debatt({ id }) {
           debatts: arrayRemove({
             author: info?.author,
             title: info?.title,
+            body: info?.body,
           }),
         });
       }
