@@ -55,12 +55,7 @@ export default function Footer() {
 					)}
 
 					<ul>
-						<Link
-							href={{
-								pathname: "/",
-							}}
-							passHref={true}
-						>
+						<Link href="https://www.instagram.com/deba.tts">
 							<a>Instagram</a>
 						</Link>
 					</ul>

@@ -339,10 +339,8 @@ export default function Debatt({}) {
 									{percentAgreeing == -1
 										? "No votes!"
 										: percentAgreeing > 50
-										? percentAgreeing + "% comments Agree"
-										: 100 -
-										  percentAgreeing +
-										  "% comments Disagree"}
+										? percentAgreeing + "% agrees"
+										: 100 - percentAgreeing + "% agrees"}
 								</h2>
 								<div className="relative w-full flex justify-center items-center flex-col">
 									<div className="absolute w-full bg-main h-1 rounded-full"></div>

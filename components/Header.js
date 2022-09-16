@@ -64,17 +64,17 @@ export default function Header() {
 			{router.pathname === "/login" ||
 			router.pathname === "/register" ? null : (
 				<nav
-					className={`h-[45px] w-full transition-all duration-300 flex flex-row justify-between align-center  ${
+					className={`h-[45px] w-full transition-all duration-300 flex flex-row justify-center align-center  ${
 						collapse ? "bg-backAccent border-b-2" : "bg-main"
 					}`}
 				>
-					<div
+					{/* <div
 						className={`w-fit h-full mx-4 flex justify-center items-center md:transition-all md:duration-300 ${
 							collapse ? "translate-x-0" : "-translate-x-52"
 						}`}
 					>
 						<Logo></Logo>
-					</div>
+					</div> */}
 
 					{user ? (
 						// logged in

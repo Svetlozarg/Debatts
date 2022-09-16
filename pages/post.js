@@ -118,9 +118,16 @@ export default function Post() {
 			<p className="font-bold">write your rules here...</p>
 			<ul className="list-decimal ml-6">
 				<ul className="list-disc">
-					<li>rule 1</li>
-					<li>rule 2</li>
-					<li>rule 3</li>
+					<li>
+						Rule 1: Debatts is a positive community. Do not judge,
+						bully or harass those who do not hold the same views as
+						you
+					</li>
+					<li>
+						Rule 2: Where you can, use facts and informed opinions
+						to back up your discussion
+					</li>
+					<li>Rule 3: Have fun, learn and listen to others!</li>
 				</ul>
 			</ul>
 		</div>
