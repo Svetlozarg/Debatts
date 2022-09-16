@@ -12,6 +12,7 @@ import Modal from "../components/modals/Modal";
 import ModalStandard from "../components/modals/ModalStandard";
 import { checkApproved } from "../utils/checkApproved";
 import { checkBanned } from "../utils/checkBanned";
+import { log } from "react-modal/lib/helpers/ariaAppHider";
 
 export default function Post() {
 	// Router

@@ -10,6 +10,8 @@ import {
 	updateDoc,
 	arrayUnion,
 	arrayRemove,
+	getDocs,
+	collection,
 } from "firebase/firestore";
 import { db } from "../../config/firebase";
 import { useAuth } from "../../context/AuthContext";
@@ -23,7 +25,7 @@ import { checkBanned } from "../../utils/checkBanned";
 import { checkAdmin } from "../../utils/checkAdmin";
 import useOnScreen from "../../components/hooks/useOnScreen";
 
-export default function Debatt({}) {
+export default function Debatt({ id }) {
 	const router = useRouter();
 	// Get user and register function
 	const { user, logout } = useAuth();
@@ -69,6 +71,7 @@ export default function Debatt({}) {
 					debatts: arrayUnion({
 						author: info?.author,
 						title: info?.title,
+						body: info?.body,
 					}),
 				});
 			} else if (isFollowing) {
@@ -76,6 +79,7 @@ export default function Debatt({}) {
 					debatts: arrayRemove({
 						author: info?.author,
 						title: info?.title,
+						body: info?.body,
 					}),
 				});
 			}
@@ -99,14 +103,27 @@ export default function Debatt({}) {
 		} else {
 			setIsAdmin(await checkAdmin(user));
 
-			const docRef = doc(db, "Debatts", pid);
-			const docSnap = await getDoc(docRef);
+			const querySnapshot = await getDocs(collection(db, "Debatts"));
 
-			if (docSnap.exists()) {
-				setInfo(docSnap.data());
-			} else {
-				console.log("No such document!");
-			}
+			const debattsArr = [];
+			querySnapshot.forEach((doc) => {
+				debattsArr.push(doc.data());
+			});
+
+			debattsArr.map((item) => {
+				if (item.title.includes(pid)) {
+					setInfo(item);
+				}
+			});
+
+			// const docRef = doc(db, 'Debatts', pid);
+			// const docSnap = await getDoc(docRef);
+
+			// if (docSnap.exists()) {
+			//   setInfo(docSnap.data());
+			// } else {
+			//   console.log('No such document!');
+			// }
 
 			if (user && user?.displayName !== undefined) {
 				const docRef2 = doc(db, "Users", user?.displayName);
@@ -114,7 +131,7 @@ export default function Debatt({}) {
 
 				if (docSnap2.exists()) {
 					docSnap2.data().debatts.map((debat) => {
-						if (debat?.title === pid) {
+						if (debat?.title.includes(pid)) {
 							setIsFollowing(true);
 							return;
 						}
@@ -339,8 +356,10 @@ export default function Debatt({}) {
 									{percentAgreeing == -1
 										? "No votes!"
 										: percentAgreeing > 50
-										? percentAgreeing + "% agrees"
-										: 100 - percentAgreeing + "% agrees"}
+										? percentAgreeing + "% comments Agree"
+										: 100 -
+										  percentAgreeing +
+										  "% comments Disagree"}
 								</h2>
 								<div className="relative w-full flex justify-center items-center flex-col">
 									<div className="absolute w-full bg-main h-1 rounded-full"></div>
