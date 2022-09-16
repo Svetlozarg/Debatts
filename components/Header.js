@@ -66,7 +66,7 @@ export default function Header() {
 				<nav
 					className={`h-[45px] w-full transition-all duration-300 flex flex-row justify-center align-center  ${
 						collapse ? "bg-backAccent border-b-2" : "bg-main"
-					}`}
+					} ${user ? "" : "!justify-end"}`}
 				>
 					{/* <div
 						className={`w-fit h-full mx-4 flex justify-center items-center md:transition-all md:duration-300 ${
