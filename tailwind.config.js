@@ -6,8 +6,8 @@ module.exports = {
 	],
 	theme: {
 		fontFamily: {
-			sans: "Helvetica",
-			mono: "AnonymousPro",
+			sans: "Open Sans",
+			mono: "Open Sans",
 		},
 		extend: {
 			colors: {

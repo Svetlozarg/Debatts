@@ -351,8 +351,8 @@ export default function Debatt({ id }) {
 						</LargeContainer>
 					) : (
 						<div className="w-full">
-							<div className="col-span-2 my-6 w-full text-center">
-								<h2 className="font-mono text-main">
+							<div className="col-span-2 w-full text-center mb-20 mt-6">
+								<h2 className="font-mono text-black">
 									{percentAgreeing == -1
 										? "No votes!"
 										: percentAgreeing > 50
@@ -360,10 +360,10 @@ export default function Debatt({ id }) {
 										: 100 - percentAgreeing + "% Disagrees"}
 								</h2>
 								<div className="relative w-full flex justify-center items-center flex-col">
-									<div className="absolute w-full bg-main h-1 rounded-full"></div>
+									<div className="absolute left-2 w-[calc(100%)] bg-main h-1 "></div>
 									<div
 										className={
-											"absolute w-4 h-4 bg-main self-start rounded-full  transition-all duration-1000 ease-in-out"
+											"absolute w-4 h-4 self-start rounded-full  transition-all duration-1000 ease-in-out bg-main "
 										}
 										style={{
 											left: isBarAnimate
