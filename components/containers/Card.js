@@ -67,7 +67,7 @@ export default function Card({ title, body, wide, id, author, createdAt }) {
 			</div>
 
 			{/* Post Information */}
-			<div className="w-full h-auto bg-backAccent p-1 gap-1 border-t-2 flex flex-row justify-between items-center text-sm [&>*]:text-opacity-60">
+			<div className="w-full h-auto bg-backAccent p-1 gap-1 border-t-2 flex flex-row justify-between mt-8 items-center text-sm [&>*]:text-opacity-60">
 				<p>{author}</p>
 				<p>{createdAt}</p>
 			</div>
