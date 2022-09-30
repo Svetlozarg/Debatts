@@ -11,8 +11,8 @@ export default function Layout({ children }) {
 				className={
 					router.pathname === "/login" ||
 					router.pathname === "/register"
-						? "mt-[110px]"
-						: "mt-[155px]"
+						? "mt-[110px] "
+						: "mt-[155px] " + "min-h-[500px]"
 				}
 			>
 				{children}
