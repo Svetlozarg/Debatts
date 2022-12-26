@@ -392,92 +392,6 @@ export default function Admin() {
         </table>
       </CardContainer>
 
-      {/* Find Posts */}
-
-      {/* Banned Users */}
-      <CardContainer wide hover={false}>
-        <h2>Banned Users</h2>
-        <table className='table-auto w-full flex flex-col justify-start items-center max-h-[250px] overflow-y-scroll shadow-inner [&>tbody>tr:nth-child(odd)]:bg-black/5'>
-          <tbody className='w-full'>
-            <tr className='flex flex-row justify-between items-center w-full p-0.5'>
-              <th>Number</th>
-              <th>Username</th>
-              <th>Unban</th>
-            </tr>
-
-            {bannedUsers.map((e, i) => {
-              return (
-                <tr
-                  key={i}
-                  className='flex flex-row justify-between items-center w-full p-0.5'
-                >
-                  <td className='w-[97px] text-left'>{i + 1}</td>
-                  <td className='w-[97px] text-center'>{e.displayName}</td>
-                  <td className='w-[97px] text-right'>
-                    <Button
-                      className='p-0'
-                      onClick={() => unban(e.displayName)}
-                    >
-                      Unban
-                    </Button>
-                  </td>
-                </tr>
-              );
-            })}
-
-            {bannedUsers.length === 0 && (
-              <tr className='flex flex-row justify-between items-center w-full p-0.5'>
-                <td></td>
-                <td>No users</td>
-                <td></td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </CardContainer>
-
-      {/* Admins */}
-      <CardContainer wide hover={false}>
-        <h2>Admins</h2>
-        <table className='table-auto w-full flex flex-col justify-start items-center max-h-[250px] overflow-y-scroll shadow-inner [&>tbody>tr:nth-child(odd)]:bg-black/5'>
-          <tbody className='w-full'>
-            <tr className='flex flex-row justify-between items-center w-full p-0.5'>
-              <th>Number</th>
-              <th>Username</th>
-              <th>Action</th>
-            </tr>
-
-            {totalAdminsUsers.map((e, i) => {
-              return (
-                <tr
-                  key={i}
-                  className='flex flex-row justify-between items-center w-full p-0.5'
-                >
-                  <td className='w-[106px] text-left'>{i + 1}</td>
-                  <td className='w-[106px] text-center'>{e.displayName}</td>
-                  <td className='w-[106px] text-right'>
-                    <Button
-                      className='p-0'
-                      onClick={() => makeUser(e.displayName)}
-                    >
-                      Make User
-                    </Button>
-                  </td>
-                </tr>
-              );
-            })}
-
-            {totalAdminsUsers.length === 0 && (
-              <tr className='flex flex-row justify-between items-center w-full p-0.5'>
-                <td></td>
-                <td>No users</td>
-                <td></td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </CardContainer>
-
       {/* Users */}
       <CardContainer wide hover={false} className='max-h-[750px]'>
         <h2>Users</h2>
@@ -491,6 +405,7 @@ export default function Admin() {
               <th>Created At</th>
               <th>Role</th>
               <th>Action</th>
+              <th>Ban</th>
             </tr>
 
             {users
@@ -512,7 +427,7 @@ export default function Admin() {
                     </td>
                     <td className='w-[140px] text-center'>{e.createdAt}</td>
                     <td className='w-[140px] text-center'>{e.role}</td>
-                    <td className='w-[120px] text-right'>
+                    <td className='w-[140px] text-center'>
                       {e.role === 'admin' ? (
                         <Button
                           className='w-full p-0 text-sm'
@@ -530,6 +445,23 @@ export default function Admin() {
                           }}
                         >
                           Make Admin
+                        </Button>
+                      )}
+                    </td>
+                    <td className='w-[80px] text-right'>
+                      {e.banned ? (
+                        <Button
+                          className='p-0 w-full m-0 text-sm'
+                          onClick={() => unban(e.displayName)}
+                        >
+                          Unban
+                        </Button>
+                      ) : (
+                        <Button
+                          className='p-0 w-full m-0 text-sm'
+                          onClick={() => ban(e.displayName)}
+                        >
+                          Ban
                         </Button>
                       )}
                     </td>
@@ -633,6 +565,92 @@ export default function Admin() {
             </div>
           </div>
         </div>
+      </CardContainer>
+
+      {/* Find Posts */}
+
+      {/* Admins */}
+      <CardContainer wide hover={false}>
+        <h2>Admins</h2>
+        <table className='table-auto w-full flex flex-col justify-start items-center max-h-[250px] overflow-y-scroll shadow-inner [&>tbody>tr:nth-child(odd)]:bg-black/5'>
+          <tbody className='w-full'>
+            <tr className='flex flex-row justify-between items-center w-full p-0.5'>
+              <th>Number</th>
+              <th>Username</th>
+              <th>Action</th>
+            </tr>
+
+            {totalAdminsUsers.map((e, i) => {
+              return (
+                <tr
+                  key={i}
+                  className='flex flex-row justify-between items-center w-full p-0.5'
+                >
+                  <td className='w-[106px] text-left'>{i + 1}</td>
+                  <td className='w-[106px] text-center'>{e.displayName}</td>
+                  <td className='w-[106px] text-right'>
+                    <Button
+                      className='p-0'
+                      onClick={() => makeUser(e.displayName)}
+                    >
+                      Make User
+                    </Button>
+                  </td>
+                </tr>
+              );
+            })}
+
+            {totalAdminsUsers.length === 0 && (
+              <tr className='flex flex-row justify-between items-center w-full p-0.5'>
+                <td></td>
+                <td>No users</td>
+                <td></td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </CardContainer>
+
+      {/* Banned Users */}
+      <CardContainer wide hover={false}>
+        <h2>Banned Users</h2>
+        <table className='table-auto w-full flex flex-col justify-start items-center max-h-[250px] overflow-y-scroll shadow-inner [&>tbody>tr:nth-child(odd)]:bg-black/5'>
+          <tbody className='w-full'>
+            <tr className='flex flex-row justify-between items-center w-full p-0.5'>
+              <th>Number</th>
+              <th>Username</th>
+              <th>Unban</th>
+            </tr>
+
+            {bannedUsers.map((e, i) => {
+              return (
+                <tr
+                  key={i}
+                  className='flex flex-row justify-between items-center w-full p-0.5'
+                >
+                  <td className='w-[97px] text-left'>{i + 1}</td>
+                  <td className='w-[97px] text-center'>{e.displayName}</td>
+                  <td className='w-[97px] text-right'>
+                    <Button
+                      className='p-0'
+                      onClick={() => unban(e.displayName)}
+                    >
+                      Unban
+                    </Button>
+                  </td>
+                </tr>
+              );
+            })}
+
+            {bannedUsers.length === 0 && (
+              <tr className='flex flex-row justify-between items-center w-full p-0.5'>
+                <td></td>
+                <td>No users</td>
+                <td></td>
+              </tr>
+            )}
+          </tbody>
+        </table>
       </CardContainer>
     </main>
   );
