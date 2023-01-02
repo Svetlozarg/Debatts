@@ -3,7 +3,13 @@ import { useEffect, useState } from 'react';
 import Card from '../components/containers/Card';
 import { useAuth } from '../context/AuthContext';
 import { useRouter } from 'next/router';
-import { collection, getDocs, doc, getDoc } from 'firebase/firestore';
+import {
+  collection,
+  getDocs,
+  doc,
+  getDoc,
+  updateDoc,
+} from 'firebase/firestore';
 import { db } from '../config/firebase';
 import loadCustomRoutes from 'next/dist/lib/load-custom-routes';
 import { checkApproved } from '../utils/checkApproved';
@@ -65,8 +71,17 @@ export default function Home() {
     setNumberPosts((prevValue) => prevValue + 10);
   };
 
+  const updateEmail = async () => {
+    await updateDoc(doc(db, 'Users', user?.displayName), {
+      email: user?.email,
+    });
+
+    console.log('Email Updated');
+  };
+
   useEffect(() => {
     fetchDebatts();
+    updateEmail();
   }, []);
 
   return (
