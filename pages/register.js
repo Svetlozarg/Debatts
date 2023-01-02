@@ -93,8 +93,6 @@ export default function Register() {
           async (userCredential) => {
             const userData = userCredential.user;
 
-            console.log(userData);
-
             updateProfile(auth?.currentUser, {
               displayName: data?.userName,
             });

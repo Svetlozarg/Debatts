@@ -206,7 +206,6 @@ export default function Admin() {
       usersArray.push(doc.data());
     });
 
-    console.log(usersArray);
     setUsers(usersArray);
   };
 
@@ -421,7 +420,11 @@ export default function Admin() {
                   >
                     <td className='w-[140px] text-left'>{i + 1}</td>
                     <td className='w-[140px] text-center'>{e.displayName}</td>
-                    <td className='w-[140px] text-center'>{e.email}</td>
+                    <td className='w-[140px] text-center' title={e.email}>
+                      {String(e.email).length >= 20
+                        ? String(e.email).substring(0, 20) + '...'
+                        : e.email}
+                    </td>
                     <td className='w-[140px] text-center'>
                       {e.debatts?.length}
                     </td>
