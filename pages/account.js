@@ -240,10 +240,10 @@ export default function Account() {
               <span className='font-semibold'>Role:</span> {userData?.role}
             </p>
             {/* Approved */}
-            <p className='capitalize'>
+            {/* <p className='capitalize'>
               <span className='font-semibold'>Approved:</span>{' '}
               {userData?.approved ? 'Yes' : 'No'}
-            </p>
+            </p> */}
             {/* Banned */}
             <p className='capitalize'>
               <span className='font-semibold'>Banned:</span>{' '}
