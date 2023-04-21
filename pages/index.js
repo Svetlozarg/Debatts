@@ -12,7 +12,6 @@ import {
 } from 'firebase/firestore';
 import { db } from '../config/firebase';
 import loadCustomRoutes from 'next/dist/lib/load-custom-routes';
-import { checkApproved } from '../utils/checkApproved';
 import { checkBanned } from '../utils/checkBanned';
 
 export default function Home() {
@@ -29,15 +28,7 @@ export default function Home() {
   // Fetch Debatts
   const fetchDebatts = async () => {
     // Chech if Approved
-    if ((await checkApproved(user)) === false) {
-      alert(
-        'You are not approved. Please wait for an admin to go through your request and approve your profile. Thank you for your patience!'
-      );
-      logout();
-      location.reload();
-      return;
-      // Check if banned
-    } else if ((await checkBanned(user)) === true) {
+    if ((await checkBanned(user)) === true) {
       alert('You are banned');
       logout();
       location.reload();
@@ -71,17 +62,8 @@ export default function Home() {
     setNumberPosts((prevValue) => prevValue + 10);
   };
 
-  const updateEmail = async () => {
-    await updateDoc(doc(db, 'Users', user?.displayName), {
-      email: user?.email,
-    });
-
-    console.log('Email Updated');
-  };
-
   useEffect(() => {
     fetchDebatts();
-    updateEmail();
   }, []);
 
   return (

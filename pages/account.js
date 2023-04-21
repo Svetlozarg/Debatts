@@ -21,7 +21,6 @@ import {
   reauthenticateWithCredential,
 } from 'firebase/auth';
 import LargeContainer from '../components/containers/LargeContainer';
-import { checkApproved } from '../utils/checkApproved';
 import { checkBanned } from '../utils/checkBanned';
 
 export default function Account() {
@@ -32,15 +31,7 @@ export default function Account() {
 
   // Fetch user data
   const handleUserData = async () => {
-    // Chech if Approved
-    if ((await checkApproved(user)) === false) {
-      alert(
-        'You are not approved. Please wait for an admin to go through your request and approve your profile. Thank you for your patience!'
-      );
-      logout();
-      return;
-      // Check if banned
-    } else if ((await checkBanned(user)) === true) {
+    if ((await checkBanned(user)) === true) {
       alert('You are banned');
       logout();
       return;

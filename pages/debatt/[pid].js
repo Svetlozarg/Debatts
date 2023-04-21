@@ -20,7 +20,6 @@ import Head from 'next/head';
 import ModalError from '../../components/modals/ModalError';
 import ButtonActionRound from '../../components/buttons/ButtonActionRound';
 import ModalAdmin from '../../components/modals/ModalAdmin';
-import { checkApproved } from '../../utils/checkApproved';
 import { checkBanned } from '../../utils/checkBanned';
 import { checkAdmin } from '../../utils/checkAdmin';
 import useOnScreen from '../../components/hooks/useOnScreen';
@@ -88,15 +87,7 @@ export default function Debatt({ id }) {
 
   // Fetch post data
   const handlePostData = async () => {
-    // Chech if Approved
-    if ((await checkApproved(user)) === false) {
-      alert(
-        'You are not approved. Please wait for an admin to go through your request and approve your profile. Thank you for your patience!'
-      );
-      logout();
-      return;
-      // Check if banned
-    } else if ((await checkBanned(user)) === true) {
+    if ((await checkBanned(user)) === true) {
       alert('You are banned');
       logout();
       return;

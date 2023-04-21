@@ -350,7 +350,7 @@ export default function Admin() {
       </CardContainer>
 
       {/* Unapproved Users */}
-      <CardContainer wide hover={false}>
+      {/* <CardContainer wide hover={false}>
         <h2>Unapproved Users</h2>
         <table className='table-auto w-full flex flex-col justify-start items-center max-h-[250px] overflow-y-scroll shadow-inner [&>tbody>tr:nth-child(odd)]:bg-black/5'>
           <tbody className='w-full'>
@@ -389,7 +389,7 @@ export default function Admin() {
             )}
           </tbody>
         </table>
-      </CardContainer>
+      </CardContainer> */}
 
       {/* Users */}
       <CardContainer wide hover={false} className='max-h-[750px]'>
